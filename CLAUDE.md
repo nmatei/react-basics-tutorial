@@ -9,7 +9,7 @@ Instructions for AI assistants working in this repository.
 
 A single React application used as a personal learning lab for React fundamentals. The app grows over time: each concept the user studies becomes one step (one demo) in the app. The goal is understanding every mandatory React term, not shipping a product.
 
-The ordered concept path lives in [docs/requirements.md](docs/requirements.md) (written in Romanian). Read it before proposing work. Where that document and the [Repo layout](#repo-layout) section below disagree, **this file wins** — the layout was revised after `requirements.md` was written.
+The ordered concept path lives in [docs/requirements.md](docs/requirements.md) (written in Romanian). Once a concept is reached update docs/requirements.md to mark it as done, and add a new concept at the end of the list.
 
 ## Who you are talking to
 

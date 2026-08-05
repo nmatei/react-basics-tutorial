@@ -59,31 +59,7 @@ O singură aplicație care crește pas cu pas: fiecare concept studiat devine un
 
 ## 6. Traseul conceptelor
 
-Listă ordonată, ajustabilă pe parcurs. Acesta este singurul loc unde traseul este definit; `README.md` și `CLAUDE.md` trimit aici.
-
-0. Setup & tooling: Node, npm, Vite, configurația TS, dev server, structura proiectului
-1. JavaScript pentru React: `let`/`const`, funcții arrow, module ES (`import`/`export`), `map`/`filter`/`reduce`, destructurare, spread/rest, template literals, optional chaining, valori „truthy/falsy”, promisiuni și `async/await`
-2. TypeScript pentru React: `type` vs `interface`, uniuni, tipuri literale, generice (la suprafață), tiparea props-urilor și a evenimentelor
-3. JSX și randare
-4. Componente și `props`
-5. Randare condiționată
-6. Liste și `key`
-7. Evenimente și handlere
-8. Stare cu `useState`
-9. Formulare și input-uri controlate
-10. Compoziție: `children`, ridicarea stării (lifting state up)
-11. `useEffect` și cleanup
-12. Aducerea datelor (fetch): stările loading / error / success
-13. `useRef` și accesul la DOM
-14. Comportamentul de randare: `React.memo`, `useMemo`, `useCallback`
-15. `useReducer`
-16. `Context` pentru stare partajată
-17. Hooks proprii (custom hooks)
-18. Error boundaries și `Suspense` (introducere)
-19. Rutare cu React Router (înlocuiește tab-ul ținut manual în `useState`)
-20. Stilizare: CSS Modules
-21. Testare: Vitest + React Testing Library
-22. Build și noțiuni de deploy
+Listă ordonată, ajustabilă pe parcurs.
 
 ## 7. Definiția de „lecție terminată”
 
