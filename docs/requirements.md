@@ -45,15 +45,17 @@ Nu se adaugă alte dependențe fără un motiv explicit, discutat.
 
 ## 5. Arhitectura aplicației
 
-O singură aplicație, cu un rând de butoane (tab-uri) — câte unul pentru fiecare concept studiat.
+O singură aplicație care crește pas cu pas: fiecare concept studiat devine un demo nou.
 
-- `src/App.tsx` conține un registru de tab-uri: `{ id, label, Component }[]`.
-- Tab-ul activ este ținut inițial în `useState`; migrarea la React Router este ea însăși o lecție ulterioară (§6, pasul 19).
-- Fiecare concept trăiește în `src/lessons/NN-nume/`:
-  - `index.tsx` — exportă o singură componentă, cea afișată în tab.
-  - `notes.md` — notițe scurte despre concept.
-- Adăugarea unei lecții = un director nou + o singură intrare adăugată în registru. Nimic altceva nu se modifică.
-- Lecțiile deja existente trebuie să rămână funcționale pe măsură ce aplicația crește.
+> Revizuit după versiunea inițială. Detaliile complete și obligatorii sunt în [CLAUDE.md](../CLAUDE.md) — acolo este sursa de adevăr pentru structură.
+
+- `src/App.tsx` este doar un shell: ține registrul `type Demo = { id: string; step: number; title: string; element: ReactNode }` + `const demos: Demo[]`, pasul activ în `useState` și `const active = demos.find(d => d.id === activeId) ?? demos[0]`. Nu conține cod de demo.
+- Shell-ul randează titlul `Pas N — Titlu`; demo-ul randează doar conținutul lui.
+- Fiecare concept trăiește într-un fișier propriu: `src/demos/<Concept>.tsx` (ex. `Counter.tsx`, `Timer.tsx`).
+- Restul structurii: `src/components/` (partajat între pași), `src/hooks/` (un hook per fișier), `src/context/` (un provider + hook-ul lui, per fișier), `src/lib/` (helperi mici).
+- Adăugarea unui pas = un fișier nou în `src/demos/` + o singură intrare în registru. Nimic altceva nu se modifică.
+- Pasul activ este ținut inițial în `useState`; migrarea la React Router este ea însăși o lecție ulterioară (§6, pasul 19). Meniul de navigare se construiește când există suficiente demo-uri.
+- Pașii deja existenți trebuie să rămână funcționali pe măsură ce aplicația crește.
 
 ## 6. Traseul conceptelor
 
@@ -87,16 +89,17 @@ Listă ordonată, ajustabilă pe parcurs. Acesta este singurul loc unde traseul 
 
 O lecție este terminată când:
 
-- tab-ul corespunzător rulează în aplicație;
-- există `notes.md` lângă lecție: ce este conceptul, analogia cu Python/Java/C#, capcane;
+- demo-ul rulează în aplicație, ajuns acolo prin registru;
+- fișierul din `src/demos/` începe cu comentariul-antet `// Pas N — <concept>.` care explică **de ce** există pasul, nu doar ce face;
+- `App.tsx` a crescut cu exact o intrare în registru;
 - `npm run build` trece fără erori;
 - conceptul poate fi explicat cu propriile cuvinte, fără să te uiți în cod.
 
 ## 8. Cerințe non-funcționale
 
 - `CLAUDE.md` și `.github/copilot-instructions.md` nu au voie să divergă; sincronizarea este impusă de script (`scripts/sync-ai-instructions.sh`).
-- Commit-uri mici, unul per lecție (sau mai mici).
-- Limbă: conversația în română; codul, comentariile și notițele din repo în engleză.
+- Commit-uri mici, unul per pas, cu mesaj de forma `pas 2 — useState (Counter)`. Fiecare pas trebuie să poată fi revenit individual.
+- Limbă: conversația în română; comentariile din `src/` în română (sunt notițe de învățare); identificatorii, numele de fișiere și documentația (`docs/`, `README.md`) în engleză.
 
 ## 9. În afara scopului
 

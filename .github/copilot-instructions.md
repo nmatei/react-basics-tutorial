@@ -10,9 +10,9 @@ Instructions for AI assistants working in this repository.
 
 ## Project
 
-A single React application used as a personal learning lab for React fundamentals. The app grows over time: each concept the user studies becomes a tab (button) in the app. The goal is understanding every mandatory React term, not shipping a product.
+A single React application used as a personal learning lab for React fundamentals. The app grows over time: each concept the user studies becomes one step (one demo) in the app. The goal is understanding every mandatory React term, not shipping a product.
 
-The authoritative spec — including the ordered concept path — is [docs/requirements.md](docs/requirements.md) (written in Romanian). Read it before proposing work.
+The ordered concept path lives in [docs/requirements.md](docs/requirements.md) (written in Romanian). Read it before proposing work. Where that document and the [Repo layout](#repo-layout) section below disagree, **this file wins** — the layout was revised after `requirements.md` was written.
 
 ## Who you are talking to
 
@@ -30,15 +30,13 @@ For every concept, in this order: **explain → answer questions → write code 
 - One concept per session.
 - Ask before writing code.
 - Write the **smallest** working example that demonstrates the concept, not a complete one.
-- Never scaffold future lessons — no placeholders, no folders, no imports for concepts not yet reached.
+- Never scaffold future lessons — no placeholder files, no imports for concepts not yet reached.
 - When the user asks to be guided step by step, do not hand over the full solution.
-- Reply in **Romanian**. Write repository artifacts (code, comments, `notes.md`, docs) in **English**.
+- Reply in **Romanian**.
 
 ## Stack & commands
 
 Vite · React 19 · TypeScript · npm. Vitest + React Testing Library are added only when the testing lesson is reached. Do not add other dependencies without an explicit, discussed reason.
-
-Commands (available once Lesson 0 has created the app):
 
 ```bash
 npm install
@@ -48,35 +46,99 @@ npm run preview  # serve the build
 npm test         # from the testing lesson onward
 ```
 
-## Repo layout & how to add a lesson
+## Repo layout
+
+Every kind of code has exactly one destination, decided before the code is written:
 
 ```
 src/
-  App.tsx              # tab registry: { id, label, Component }[]
-  lessons/
-    NN-name/
-      index.tsx        # exports the single component shown in the tab
-      notes.md         # what it is, Python/Java/C# analogy, gotchas
+  App.tsx        # shell: the demo REGISTRY + the active demo. Stays short.
+  demos/         # ONE FILE PER STEP — Counter.tsx, Timer.tsx, ...
+  components/    # components shared between steps
+  hooks/         # one custom hook per file
+  context/       # one provider + its consumer hook, per file
+  lib/           # small helpers — pure functions, no JSX
+  assets/        # images, svg
 ```
 
-Adding a lesson means exactly two things: create `src/lessons/NN-name/`, then append one entry to the registry in `src/App.tsx`. Nothing else is touched, and lessons already in place must keep working.
+These folders exist from the start, deliberately. Creating a folder is not scaffolding a lesson; creating a *file* for a concept not yet reached is, and stays forbidden.
 
-The active tab lives in `useState` until the React Router lesson (step 19 of the concept path) replaces it.
+Rules that keep this from collapsing back into one big file:
+
+- A demo never lives in `App.tsx`. Not even a small one.
+- A file in `demos/` is named after the concept it demonstrates (`Counter.tsx`, `Timer.tsx`), not after the step number.
+- Code shared by two steps moves to `components/`, `hooks/` or `lib/` — it is not copy-pasted, and it is not left in the first demo for the second one to import.
+
+## The registry in App.tsx
+
+`App.tsx` is a shell. It holds the list of demos, never their content:
+
+```ts
+type Demo = { id: string; step: number; title: string; element: ReactNode }
+
+const demos: Demo[] = [
+  { id: 'counter', step: 2, title: 'useState', element: <Counter /> },
+]
+```
+
+plus the active id in state, and the lookup:
+
+```ts
+const [activeId, setActiveId] = useState('counter')
+const active = demos.find((d) => d.id === activeId) ?? demos[0]
+```
+
+The `?? demos[0]` fallback exists so `active` is never `undefined` — that is what lets us avoid a non-null assertion (`!`), which is banned.
+
+- **Adding a step = one new file in `src/demos/` + one new entry in `demos`. Nothing else changes.**
+- The shell renders the heading `Pas N — Titlu` from `active.step` / `active.title`. A demo renders **only its own content** and never its own title.
+- Steps already in place must keep working as the app grows.
+- `App.tsx` must stay short. Past ~100 lines, something in it belongs in `components/`.
+- The navigation menu is built later, once there are enough demos to justify it. Until then the registry alone is enough.
+- The active step lives in `useState` until the React Router lesson (step 19) replaces it.
 
 ## Code conventions
 
 - Function components only.
 - Type props with a local `Props` type in the same file.
 - No `any`. No non-null assertions (`!`) to silence the type checker.
-- One default export per lesson file: the lesson component. Everything else is a named export.
-- Comment only where a JS/React idiom would surprise a Java/C#/Python developer — not to restate what the code does.
+- One default export per demo file: the demo component. Everything else is a named export.
+- Identifiers, file names, `docs/` and `README.md` are in **English**.
 
-## Definition of done for a lesson
+### Comments
 
-- The tab runs in the app.
-- `notes.md` exists next to the lesson.
+Comments in `src/` are in **Romanian** — they are the user's learning notes, not production documentation.
+
+Every file in `demos/` opens with a header comment: the step line, then a few lines on **why this step exists** — which problem the concept solves — not a restatement of what the code does.
+
+```tsx
+// Pas 2 — useState.
+// De ce: o variabila normala se pierde la fiecare re-render, iar React nu afla
+// ca s-a schimbat ceva. useState da valorii o identitate care supravietuieste
+// re-render-ului si, in acelasi timp, cere lui React sa redeseneze.
+// Capcana: setState nu modifica variabila pe loc — la randarea urmatoare
+// primesti valoarea noua.
+```
+
+Inside the code, comment only where a JS/React idiom would surprise a Java/C#/Python developer, and say **why** it is written that way. Do not narrate lines that already read clearly.
+
+## Definition of done for a step
+
+- The demo runs in the app, reachable from the registry.
+- The file lives in `src/demos/`, opens with the `// Pas N — <concept>.` header, and renders no title of its own.
+- `App.tsx` grew by exactly one registry entry.
 - `npm run build` passes.
 - The user can explain the concept in their own words without looking at the code.
+
+## Commits
+
+One commit per step, message in the form:
+
+```
+pas 2 — useState (Counter)
+```
+
+Never fold two steps into one commit — each step must stay individually revertable.
 
 ## Syncing
 
