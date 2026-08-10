@@ -108,6 +108,28 @@ The single source of truth for navigation is the active **id**. The rest of the 
 - Named exports only — `export function Counter()`. No `export default` anywhere in `src/`, with one exception: `App.tsx`, which `main.tsx` imports as a default (Vite template).
 - Identifiers, file names, `docs/` and `README.md` are in **English**.
 
+### Import paths
+
+**New code always imports internal modules through the `@/` alias — `@/` maps to `src/`.** Never write a new `../` import, and never write `../../` under any circumstance. Relative paths stay only for a sibling in the same folder (`./PriceCard`), where `./` carries the useful information that the file is right there.
+
+```ts
+import { DemoTab } from "@/components/DemoTab"; // yes
+import { formatTime } from "@/lib/format"; // yes, from any depth
+import { PriceCard } from "./PriceCard"; // yes — sibling
+import { formatTime } from "../../lib/format"; // no
+```
+
+The alias is declared in **two** places that must be kept in sync by hand — they are read by two independent programs:
+
+| File                | Key                                                                  | Read by                            | Breaks if missing                                  |
+| ------------------- | -------------------------------------------------------------------- | ---------------------------------- | -------------------------------------------------- |
+| `tsconfig.app.json` | `paths: { "@/*": ["./src/*"] }`                                      | TypeScript, and through it the IDE | editor shows `Cannot find module`, `tsc -b` fails  |
+| `vite.config.ts`    | `resolve.alias: { "@": path.resolve(import.meta.dirname, "./src") }` | Vite / esbuild / Rollup            | dev and build fail with `Failed to resolve import` |
+
+Adding another alias means editing both. `baseUrl` is deliberately absent — deprecated in TypeScript 6, and `paths` resolves relative to the tsconfig without it. `import.meta.dirname`, not `__dirname` — the project is ESM and Vite 8 warns on the CommonJS form.
+
+Everything the alias does **not** cover, so it isn't hunted for in the wrong place: `index.html`, `url()` inside CSS, and `tsconfig.node.json` (which only covers `vite.config.ts` itself).
+
 ### Comments
 
 Comments in `src/` are in **Romanian** — they are the user's learning notes, not production documentation.

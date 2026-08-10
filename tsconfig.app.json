@@ -16,6 +16,18 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Path alias — jumatatea "TypeScript + editor" a aliasului @/.
+       Fara ea: aplicatia ruleaza, dar IDE-ul zice "Cannot find module" si
+       `tsc -b` pica. Trebuie tinuta sincronizata cu resolve.alias din
+       vite.config.ts — sunt doua programe diferite, niciunul nu-l citeste pe
+       configul celuilalt.
+       Nota: tutorialele mai vechi pun aici si `"baseUrl": "."`. In TypeScript 6
+       e deprecat si da eroare; `paths` se rezolva oricum relativ la folderul
+       acestui tsconfig, deci "./src/*" inseamna exact ce trebuie. */
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
     /* Linting */
     "noUnusedLocals": true,
     "noUnusedParameters": true,

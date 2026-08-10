@@ -126,7 +126,7 @@ export function Timer() {
     // niciodata. Dezabonarea o adaugam la pasul urmator.
     return () => {
       document.body.removeEventListener("click", onBodyClick);
-    }
+    };
   }, []);
 
   return (

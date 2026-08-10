@@ -4,16 +4,20 @@
 // singur la fiecare intrare noua.
 
 import { useState, type ReactNode } from "react";
-import "./App.css";
-import { DemoTab } from "./components/DemoTab";
-import { Welcome } from "./components/Welcome";
-import { Counter } from "./demos/Counter";
-import { CounterClass } from "./demos/CounterClass";
-import { DemoMenu } from "./demos/DemoMenu";
-import { LiftingState } from "./demos/LiftingState";
-import { PrettierFormat } from "./demos/PrettierFormat";
-import { PureFunctions } from "./demos/PureFunctions";
-import { Timer } from "./demos/Timer";
+// De la pasul 8, importurile interne folosesc aliasul @/ = src/. Din acest
+// fisier diferenta e cosmetica (e chiar in radacina lui src), dar castigul e ca
+// aceleasi linii raman valide oriunde le-ai muta.
+import "@/App.css";
+import { DemoTab } from "@/components/DemoTab";
+import { Welcome } from "@/components/Welcome";
+import { Counter } from "@/demos/Counter";
+import { CounterClass } from "@/demos/CounterClass";
+import { DemoMenu } from "@/demos/DemoMenu";
+import { LiftingState } from "@/demos/LiftingState";
+import { PathAlias } from "@/demos/PathAlias";
+import { PrettierFormat } from "@/demos/PrettierFormat";
+import { PureFunctions } from "@/demos/PureFunctions";
+import { Timer } from "@/demos/Timer";
 
 // ReactNode = orice poate fi randat (element, text, null). `element` chiar tine
 // un element JSX, adica descrierea deja construita a demo-ului.
@@ -27,13 +31,14 @@ const demos: Demo[] = [
   { id: "prettier-format", step: 4, title: "Prettier și formatare automată", element: <PrettierFormat /> },
   { id: "timer", step: 5, title: "useEffect și cleanup", element: <Timer /> },
   { id: "lifting-state", step: 6, title: "Lifting state up", element: <LiftingState /> },
-  { id: "demo-menu", step: 7, title: "Liste: map și key", element: <DemoMenu /> }
+  { id: "demo-menu", step: 7, title: "Liste: map și key", element: <DemoMenu /> },
+  { id: "path-alias", step: 8, title: "Alias de cale @/", element: <PathAlias /> }
 ];
 
 function App() {
   // Singura sursa de adevar a navigarii: ID-ul activ, un string. Se pierde la
   // refresh — useState traieste in memoria paginii, nu pe disc.
-  const [activeId, setActiveId] = useState("demo-menu");
+  const [activeId, setActiveId] = useState("path-alias");
 
   // `?? demos[0]` face ca `active` sa nu fie niciodata undefined — asa evitam
   // `!` (non-null assertion), care e interzis in acest proiect. Demo-ul activ e

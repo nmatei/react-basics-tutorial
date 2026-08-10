@@ -2,9 +2,9 @@
 // ramana doar un shell. Nu demonstreaza niciun concept React — o pastram ca
 // punct de plecare si pentru experimentele din pasul 1 (props).
 
-import reactLogo from "../assets/react.svg";
-import viteLogo from "../assets/vite.svg";
-import heroImg from "../assets/hero.png";
+import reactLogo from "@/assets/react.svg";
+import viteLogo from "@/assets/vite.svg";
+import heroImg from "@/assets/hero.png";
 
 // Props tipate cu un tip local, in acelasi fisier. `?` = optional.
 type TestButtonProps = { width?: number; title?: string };

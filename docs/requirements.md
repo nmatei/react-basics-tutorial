@@ -54,6 +54,7 @@ O singură aplicație care crește pas cu pas: fiecare concept studiat devine un
 - Fiecare concept trăiește într-un fișier propriu: `src/demos/<Concept>.tsx` (ex. `Counter.tsx`, `Timer.tsx`).
 - Restul structurii: `src/components/` (partajat între pași), `src/hooks/` (un hook per fișier), `src/context/` (un provider + hook-ul lui, per fișier), `src/lib/` (helperi mici).
 - Adăugarea unui pas = un fișier nou în `src/demos/` + o singură intrare în registru. Nimic altceva nu se modifică.
+- Importurile interne folosesc aliasul `@/` = `src/`, declarat în două locuri ținute sincron: `paths` în `tsconfig.app.json` (TypeScript + IDE) și `resolve.alias` în `vite.config.ts` (bundler). Importurile relative rămân doar pentru frați din același folder (`./Sibling`).
 - Pasul activ este ținut în `useState`, iar meniul de navigare se derivă din registru cu `map`; migrarea la React Router este ea însăși o lecție ulterioară (§6, pasul 19).
 - Pașii deja existenți trebuie să rămână funcționali pe măsură ce aplicația crește.
 
@@ -68,7 +69,8 @@ Listă ordonată, ajustabilă pe parcurs.
 - [x] Pas 5 — useEffect și cleanup (Timer)
 - [x] Pas 6 — Lifting state up (o singură sursă de adevăr, componentă controlată)
 - [x] Pas 7 — Liste: `map` și `key` (meniul de navigare)
-- [ ] Pas 8 — Randare condiționată (`&&`, ternar, early return)
+- [x] Pas 8 — Alias de cale `@/` (importuri stabile, independente de adâncime)
+- [ ] Pas 9 — Randare condiționată (`&&`, ternar, early return)
 
 ## 7. Definiția de „lecție terminată”
 
