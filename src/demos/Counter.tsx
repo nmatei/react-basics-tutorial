@@ -8,7 +8,7 @@
 // setCount(...) variabila `count` are tot valoarea veche; valoarea noua apare
 // abia la randarea urmatoare.
 
-import { useState } from 'react'
+import { useState } from "react";
 
 var clickCount = 0;
 
@@ -22,7 +22,6 @@ export function Counter() {
   // const count = countR[0];
   // const setCount = countR[1];
 
-
   return (
     <div>
       <p style={{ fontSize: 64, margin: 0 }}>{count}</p>
@@ -34,10 +33,17 @@ export function Counter() {
           setCount(count + 1) in acelasi handler ar citi ambele acelasi
           instantaneu si ar da 1, in timp ce setCount(c => c + 1) de doua ori se
           cumuleaza corect: 0 -> 1 -> 2. */}
-      <button type="button" onClick={() => setCount((c) => c + 1)}>
+      <button type="button" onClick={() => setCount(c => c + 1)}>
         +1
       </button>
-      <button type="button" onClick={() => setCount((c) => { return c - 1 })}>
+      <button
+        type="button"
+        onClick={() =>
+          setCount(c => {
+            return c - 1;
+          })
+        }
+      >
         -1
       </button>
 
@@ -45,10 +51,15 @@ export function Counter() {
       <button type="button" onClick={() => setCount(0)}>
         Reset
       </button>
-      <button type="button" onClick={() => {
-        // count++; // this will not work...
-        clickCount++; // this is not a good practice...
-      }}>count++ ({clickCount})</button>
+      <button
+        type="button"
+        onClick={() => {
+          // count++; // this will not work...
+          clickCount++; // this is not a good practice...
+        }}
+      >
+        count++ ({clickCount})
+      </button>
     </div>
-  )
+  );
 }

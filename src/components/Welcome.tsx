@@ -2,20 +2,16 @@
 // ramana doar un shell. Nu demonstreaza niciun concept React — o pastram ca
 // punct de plecare si pentru experimentele din pasul 1 (props).
 
-import reactLogo from '../assets/react.svg'
-import viteLogo from '../assets/vite.svg'
-import heroImg from '../assets/hero.png'
+import reactLogo from "../assets/react.svg";
+import viteLogo from "../assets/vite.svg";
+import heroImg from "../assets/hero.png";
 
 // Props tipate cu un tip local, in acelasi fisier. `?` = optional.
-type TestButtonProps = { width?: number; title?: string }
+type TestButtonProps = { width?: number; title?: string };
 
 function TestButton(props: TestButtonProps) {
   // ?? = "nullish coalescing": ia partea dreapta doar daca stanga e null/undefined.
-  return (
-    <button style={{ width: props.width ?? 'auto', padding: '8px', margin: 5 }}>
-      {props.title}
-    </button>
-  )
+  return <button style={{ width: props.width ?? "auto", padding: "8px", margin: 5 }}>{props.title}</button>;
 }
 
 function Hero() {
@@ -25,15 +21,15 @@ function Hero() {
       <img src={reactLogo} className="framework" alt="React logo" />
       <img src={viteLogo} className="vite" alt="Vite logo" />
     </div>
-  )
+  );
 }
 
 export function Welcome() {
   // Experimentul din pasul 1: o componenta e doar o functie care returneaza un
   // OBIECT (descrierea UI-ului), nu HTML si nu un obiect viu care se redeseneaza
   // singur. Vezi in consola ce se printeaza.
-  const b1 = TestButton({ width: 150, title: 'Button fn call' })
-  console.log('b1', b1)
+  const b1 = TestButton({ width: 150, title: "Button fn call" });
+  console.log("b1", b1);
 
   return (
     <>
@@ -44,7 +40,7 @@ export function Welcome() {
           {/* Aceeasi componenta, doua forme: ca element JSX (React o apeleaza)
               si ca apel de functie direct (o apelam noi). */}
           <TestButton width={200} title="My First Button" />
-          {TestButton({ width: 100, title: 'fn call' })}
+          {TestButton({ width: 100, title: "fn call" })}
           {b1}
           <p>
             Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
@@ -122,5 +118,5 @@ export function Welcome() {
       <div className="ticks"></div>
       <section id="spacer"></section>
     </>
-  )
+  );
 }

@@ -1,29 +1,29 @@
-import { Component } from 'react'
+import { Component } from "react";
 
-type CounterClassState = { count: number }
+type CounterClassState = { count: number };
 
 // Component<P, S>: P = tipul props-urilor (nu avem, deci `object`), S = tipul
 // starii. React are nevoie de S ca sa stie ce accepta setState.
 export class CounterClass extends Component<object, CounterClassState> {
   // Echivalentul lui `useState(0)`. Ruleaza o singura data, la construirea
   // instantei — nu la fiecare render, ca la o functie.
-  state: CounterClassState = { count: 0 }
+  state: CounterClassState = { count: 0 };
 
   increment = () => {
-    this.setState((s) => ({ count: s.count + 1 }))
-  }
+    this.setState(s => ({ count: s.count + 1 }));
+  };
 
   decrement = () => {
-    this.setState((s) => ({ count: s.count - 1 }))
-  }
+    this.setState(s => ({ count: s.count - 1 }));
+  };
 
   reset = () => {
-    this.setState({ 
+    this.setState({
       count: 0
-    })
-    
+    });
+
     //this.state.count = 0 // this is not a good practice...
-  }
+  };
 
   // mySetState = () => {
   //   this.state.count = 3 // this is not a good practice...
@@ -34,21 +34,27 @@ export class CounterClass extends Component<object, CounterClassState> {
   // apeleaza React, niciodata tu. Nu are voie sa schimbe starea — doar sa
   // descrie ce trebuie afisat pentru starea curenta.
   render() {
-    console.log('CounterClass render', this.state.count)
+    console.log("CounterClass render", this.state.count);
     return (
       <div>
         <p style={{ fontSize: 64, margin: 0 }}>{this.state.count}</p>
 
-        <button type="button" onClick={() => {
-          console.info('who is this?', this)
-          this.increment()
-        }}>
+        <button
+          type="button"
+          onClick={() => {
+            console.info("who is this?", this);
+            this.increment();
+          }}
+        >
           +1
         </button>
-        <button type="button" onClick={function(this: any) {
-          console.info('who is this?', this)
-          //this.increment()
-        }}>
+        <button
+          type="button"
+          onClick={function (this: any) {
+            console.info("who is this?", this);
+            //this.increment()
+          }}
+        >
           +1
         </button>
         <button type="button" onClick={this.decrement}>
@@ -58,7 +64,7 @@ export class CounterClass extends Component<object, CounterClassState> {
           Reset
         </button>
       </div>
-    )
+    );
   }
 }
 

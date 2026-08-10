@@ -61,7 +61,7 @@ src/
   assets/        # images, svg
 ```
 
-These folders exist from the start, deliberately. Creating a folder is not scaffolding a lesson; creating a *file* for a concept not yet reached is, and stays forbidden.
+These folders exist from the start, deliberately. Creating a folder is not scaffolding a lesson; creating a _file_ for a concept not yet reached is, and stays forbidden.
 
 Rules that keep this from collapsing back into one big file:
 
@@ -84,8 +84,8 @@ const demos: Demo[] = [
 plus the active id in state, and the lookup:
 
 ```ts
-const [activeId] = useState('counter')
-const active = demos.find((d) => d.id === activeId) ?? demos[0]
+const [activeId] = useState("counter");
+const active = demos.find(d => d.id === activeId) ?? demos[0];
 ```
 
 The `?? demos[0]` fallback exists so `active` is never `undefined` — that is what lets us avoid a non-null assertion (`!`), which is banned.

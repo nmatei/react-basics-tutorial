@@ -25,37 +25,35 @@ const matrix = [
   return (
     <section>
       <p>
-        Formatterul proiectului este Prettier, cu reguli fixe in <code>.prettierrc</code>:
-        <code> semi: true</code>, <code>singleQuote: false</code>, <code>printWidth: 120</code>,
-        <code> arrowParens: "avoid"</code> si plugin-ul <code>prettier-plugin-tailwindcss</code>.
+        Formatterul proiectului este Prettier, cu reguli fixe in <code>.prettierrc</code>:<code> semi: true</code>,{" "}
+        <code>singleQuote: false</code>, <code>printWidth: 120</code>,<code> arrowParens: "avoid"</code> si plugin-ul{" "}
+        <code>prettier-plugin-tailwindcss</code>.
       </p>
 
       <p>
-        Ignorarea pe un bloc punctual in JS/TS se face cu <code>// prettier-ignore</code>, pus imediat
-        inainte de nodul care trebuie pastrat exact cum e scris:
+        Ignorarea pe un bloc punctual in JS/TS se face cu <code>// prettier-ignore</code>, pus imediat inainte de nodul
+        care trebuie pastrat exact cum e scris:
       </p>
       <pre>
         <code>{jsIgnoreExample}</code>
       </pre>
 
       <p>
-        In JSX directiva este <code>{"{/* prettier-ignore */}"}</code> si se aplica elementului imediat
-        urmator:
+        In JSX directiva este <code>{"{/* prettier-ignore */}"}</code> si se aplica elementului imediat urmator:
       </p>
       <pre>
         <code>{jsxIgnoreExample}</code>
       </pre>
 
       <p>
-        Important: in JS/TS directiva afecteaza doar nodul imediat urmator. Nu exista varianta
-        "ignora de aici pana aici" in JS. Formele <code>prettier-ignore-start</code> si
+        Important: in JS/TS directiva afecteaza doar nodul imediat urmator. Nu exista varianta "ignora de aici pana
+        aici" in JS. Formele <code>prettier-ignore-start</code> si
         <code>prettier-ignore-end</code> sunt pentru Markdown, YAML si HTML.
       </p>
 
       <p>
-        Folosim <code>prettier-ignore</code> rar si motivat, pentru cazuri in care alinierea manuala
-        face datele mai usor de citit (matrice, tabele de valori), nu ca sa ocolim conventia
-        comuna de formatare.
+        Folosim <code>prettier-ignore</code> rar si motivat, pentru cazuri in care alinierea manuala face datele mai
+        usor de citit (matrice, tabele de valori), nu ca sa ocolim conventia comuna de formatare.
       </p>
     </section>
   );

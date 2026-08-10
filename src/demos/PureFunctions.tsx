@@ -8,17 +8,17 @@
 // din alt motiv. Intr-o aplicatie reala asta inseamna client care vede un curs
 // vechi si o suma gresita — exact genul de bug care ajunge in productie.
 
-import { useState } from 'react'
+import { useState } from "react";
 
-const RATE_INITIAL = 5
-const RATE_STEP = 0.05
-const COMISION_PCT = 0.01
-const COMISION_ID = 'pure-comision'
+const RATE_INITIAL = 5;
+const RATE_STEP = 0.05;
+const COMISION_PCT = 0.01;
+const COMISION_ID = "pure-comision";
 
 // PURA: primeste tot ce ii trebuie prin argumente. Aceleasi (ron, rate) dau
 // mereu acelasi rezultat, indiferent de ce se intampla in restul aplicatiei.
 function pureConvert(ron: number, rate: number) {
-  return ron / rate
+  return ron / rate;
 }
 
 // IMPURA: semnatura IDENTICA cu cea de sus, deci la locul de apel cele doua
@@ -29,24 +29,24 @@ function pureConvert(ron: number, rate: number) {
 // DOM-ul, dar nu se schimba nimic din ce urmareste React → niciun re-render →
 // pe ecran ramane suma calculata inainte de bifare.
 function impureConvert(ron: number, rate: number, comision: boolean) {
-  const eur = ron / rate
+  const eur = ron / rate;
 
   // getElementById intoarce HTMLElement | null, iar `.checked` exista doar pe
   // input. `instanceof` ingusteaza tipul si ne scapa si de `any`, si de `!`.
   // const el = document.getElementById(COMISION_ID)
   // const cuComision = el instanceof HTMLInputElement && el.checked
 
-  console.info('impureConvert', { ron, rate, comision })
+  console.info("impureConvert", { ron, rate, comision });
 
-  return comision ? eur * (1 - COMISION_PCT) : eur
+  return comision ? eur * (1 - COMISION_PCT) : eur;
 }
 
 export function PureFunctions() {
   // Suma si cursul sunt state React tocmai ca sa se vada contrastul:
   // schimbarea lor declanseaza re-render, bifarea checkbox-ului nu.
-  const [ron, setRon] = useState(100)
-  const [rate, setRate] = useState(RATE_INITIAL)
-  const [comision, setComission] = useState(false)
+  const [ron, setRon] = useState(100);
+  const [rate, setRate] = useState(RATE_INITIAL);
+  const [comision, setComission] = useState(false);
 
   return (
     <div>
@@ -55,10 +55,10 @@ export function PureFunctions() {
       </p>
       {/* Forma cu functie — setRon(r => ...) — citeste valoarea curenta in
           momentul aplicarii, nu pe cea capturata la render. */}
-      <button type="button" onClick={() => setRon((r) => Math.max(0, r - 10))}>
+      <button type="button" onClick={() => setRon(r => Math.max(0, r - 10))}>
         -10
       </button>
-      <button type="button" onClick={() => setRon((r) => r + 10)}>
+      <button type="button" onClick={() => setRon(r => r + 10)}>
         +10
       </button>
 
@@ -67,10 +67,10 @@ export function PureFunctions() {
       </p>
       {/* Math.max opreste cursul inainte de 0, ca sa nu ajungem la impartire
           la zero si sa afisam Infinity in loc de lectie. */}
-      <button type="button" onClick={() => setRate((r) => Math.max(RATE_STEP, r - RATE_STEP))}>
+      <button type="button" onClick={() => setRate(r => Math.max(RATE_STEP, r - RATE_STEP))}>
         -{RATE_STEP}
       </button>
-      <button type="button" onClick={() => setRate((r) => r + RATE_STEP)}>
+      <button type="button" onClick={() => setRate(r => r + RATE_STEP)}>
         +{RATE_STEP}
       </button>
 
@@ -78,7 +78,7 @@ export function PureFunctions() {
         {/* Checkbox NEcontrolat: fara useState, fara onChange. Valoarea lui
             traieste doar in DOM. `htmlFor` in loc de `for` pentru ca `for` e
             cuvant rezervat in JS. */}
-        <input id={COMISION_ID} type="checkbox" onChange={(e) => setComission(e.target.checked)} />{' '}
+        <input id={COMISION_ID} type="checkbox" onChange={e => setComission(e.target.checked)} />{" "}
         <label htmlFor={COMISION_ID}>aplica comision ({COMISION_PCT * 100}%)</label>
       </p>
 
@@ -91,12 +91,12 @@ export function PureFunctions() {
 
       <p>
         <small>
-          Experiment: modifica suma sau cursul → ambele valori se actualizeaza. Bifeaza comisionul → nu se
-          schimba nimic. Apasa apoi +10 → comisionul apare brusc, la actiunea gresita.
+          Experiment: modifica suma sau cursul → ambele valori se actualizeaza. Bifeaza comisionul → nu se schimba
+          nimic. Apasa apoi +10 → comisionul apare brusc, la actiunea gresita.
         </small>
       </p>
     </div>
-  )
+  );
 }
 
 // Cum se rezolva corect

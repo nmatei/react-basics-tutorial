@@ -11,14 +11,14 @@ import { PureFunctions } from "./demos/PureFunctions";
 
 // ReactNode = orice poate fi randat (element, text, null). `element` chiar tine
 // un element JSX, adica descrierea deja construita a demo-ului.
-type Demo = { id: string; step: number; title: string; element: ReactNode }
+type Demo = { id: string; step: number; title: string; element: ReactNode };
 
 const demos: Demo[] = [
   { id: "welcome", step: 1, title: "Structura proiectului", element: <Welcome /> },
-  { id: "counter", step: 2, title: "useState", element: <Counter /> },    
+  { id: "counter", step: 2, title: "useState", element: <Counter /> },
   { id: "counter-class", step: 2, title: "useState — varianta veche, cu clasa", element: <CounterClass /> },
   { id: "pure-functions", step: 3, title: "Funcții pure", element: <PureFunctions /> },
-  { id: "prettier-format", step: 4, title: "Prettier și formatare automată", element: <PrettierFormat /> },
+  { id: "prettier-format", step: 4, title: "Prettier și formatare automată", element: <PrettierFormat /> }
 ];
 
 function App() {
