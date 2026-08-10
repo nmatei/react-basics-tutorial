@@ -33,7 +33,11 @@ For every concept, in this order: **explain → answer questions → write code 
 
 ## Stack & commands
 
-Vite · React 19 · TypeScript · Tailwind CSS v4 · npm. Vitest + React Testing Library are added only when the testing lesson is reached. Do not add other dependencies without an explicit, discussed reason.
+Vite · React 19 · TypeScript · Tailwind CSS v4 · shadcn/ui · npm. Vitest + React Testing Library are added only when the testing lesson is reached. Do not add other dependencies without an explicit, discussed reason.
+
+```bash
+npx shadcn@latest add <name>   # copies a UI component into src/components/ui/
+```
 
 ```bash
 npm install
@@ -52,6 +56,7 @@ src/
   App.tsx        # shell: the demo REGISTRY + the active demo. Stays short.
   demos/         # ONE FILE PER STEP — Counter.tsx, Timer.tsx, ...
   components/    # components shared between steps
+  components/ui/ # shadcn/ui components, COPIED here by the CLI — ours to edit, not hand-written
   hooks/         # one custom hook per file
   context/       # one provider + its consumer hook, per file
   lib/           # small helpers — pure functions, no JSX
@@ -116,14 +121,15 @@ import { PriceCard } from "./PriceCard"; // yes — sibling
 import { formatTime } from "../../lib/format"; // no
 ```
 
-The alias is declared in **two** places that must be kept in sync by hand — they are read by two independent programs:
+The alias is declared in **three** places that must be kept in sync by hand — they are read by three independent programs:
 
 | File                | Key                                                                  | Read by                            | Breaks if missing                                  |
 | ------------------- | -------------------------------------------------------------------- | ---------------------------------- | -------------------------------------------------- |
 | `tsconfig.app.json` | `paths: { "@/*": ["./src/*"] }`                                      | TypeScript, and through it the IDE | editor shows `Cannot find module`, `tsc -b` fails  |
 | `vite.config.ts`    | `resolve.alias: { "@": path.resolve(import.meta.dirname, "./src") }` | Vite / esbuild / Rollup            | dev and build fail with `Failed to resolve import` |
+| `tsconfig.json`     | `paths: { "@/*": ["./src/*"] }`                                      | the shadcn CLI                     | `shadcn init` aborts with "No import alias found"  |
 
-Adding another alias means editing both. `baseUrl` is deliberately absent — deprecated in TypeScript 6, and `paths` resolves relative to the tsconfig without it. `import.meta.dirname`, not `__dirname` — the project is ESM and Vite 8 warns on the CommonJS form.
+The root `tsconfig.json` compiles nothing (`"files": []`); its copy exists only because the shadcn CLI looks there and nowhere else. Adding another alias means editing all three. `baseUrl` is deliberately absent — deprecated in TypeScript 6, and `paths` resolves relative to the tsconfig without it. `import.meta.dirname`, not `__dirname` — the project is ESM and Vite 8 warns on the CommonJS form.
 
 Everything the alias does **not** cover, so it isn't hunted for in the wrong place: `index.html`, `url()` inside CSS, and `tsconfig.node.json` (which only covers `vite.config.ts` itself).
 
@@ -136,6 +142,18 @@ From step 9 onward, **new markup is styled with Tailwind utilities on theme toke
 - A new color/spacing value is added as a token first, then used. An arbitrary value in square brackets — a raw hex or px inlined into a utility — is a smell, not a solution.
 - Tailwind v4 has **no `tailwind.config.js`** — configuration is CSS (`@theme`), and the scanner reads source files as plain text, so a class name must appear literally (`` `bg-${color}` `` never works). The flip side: the scanner also reads Markdown, so an example class name written in prose really does end up compiled into the bundle. Describe such classes in words instead of spelling them out.
 - `src/index.css` carries an unlayered `all: revert` rule for class-less `button` / `input` / `ul` / `li`, which shields steps 1–8 from Tailwind's Preflight reset. Do not delete it while those steps still rely on native element styling.
+- The old shell theme (steps 1–8) uses prefixed variables — `--brand`, `--brand-bg`, `--brand-border`, `--shell-border`. The unprefixed names (`--accent`, `--border`, `--ring`, …) belong to the design-system tokens, because that is what generated components expect. Do not reintroduce a second `--accent`: CSS variables are a global namespace with no compiler, and the last `:root` in the file silently wins.
+
+### UI components (from step 10)
+
+Interactive UI is not hand-written. `<button className="…">` in new markup is a bug, not a shortcut — use `<Button>` from `@/components/ui/button`, whose variants carry hover, `focus-visible` ring and a real disabled state.
+
+- `src/components/ui/` holds shadcn/ui components **copied** into the repo by `npx shadcn@latest add <name>`. They are ours: readable, editable, versioned. Re-running `add` overwrites them, so deliberate edits stay visible in git.
+- shadcn/ui is not an npm dependency. What comes from `node_modules` is only utilities: `radix-ui` (behaviour + accessibility), `class-variance-authority` (typed variants), `clsx` + `tailwind-merge` (behind `cn()`), `lucide-react` (icons).
+- Combine classes with `cn()` from `@/lib/utils` whenever a class list is conditional or passed in from outside — plain string concatenation loses to Tailwind's conflict resolution.
+- State that is a _selection_ is expressed as a variant (`variant={active ? "default" : "secondary"}`), never as `disabled` and never as hand-written colour classes.
+- An icon-only button needs an `aria-label`. The library supplies the mechanics, not the meaning.
+- The `add` command reads `components.json`; the alias it validates lives in the root `tsconfig.json` (see the table above).
 
 ### Comments
 

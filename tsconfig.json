@@ -1,4 +1,16 @@
 {
+  /* Fisierul asta nu compileaza nimic ("files": []) — doar trimite la celelalte
+     doua tsconfig-uri. `paths` de mai jos e o A TREIA copie a aliasului @/, si
+     exista dintr-un singur motiv: CLI-ul shadcn citeste tsconfig.json din
+     radacina ca sa afle aliasul. Nu citeste tsconfig.app.json (acolo traieste
+     aliasul care conteaza pentru TypeScript) si nici vite.config.ts (acolo
+     traieste cel pentru bundler). Fara linia asta, `shadcn init` refuza sa
+     porneasca: "No import alias found". */
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
   "files": [],
   "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
 }

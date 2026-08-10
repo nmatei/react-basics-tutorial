@@ -24,7 +24,13 @@
 // pentru ca `bg-card` inseamna `background: var(--card)`, iar clasa .dark de pe
 // <html> rescrie variabila. Nicio componenta React nu afla ca s-a schimbat tema.
 
-import { useEffect, useState, type CSSProperties } from "react";
+// Pas 10 — comutatorul de tema care statea aici s-a mutat in components/ThemeToggle
+// si a urcat in meniu: tema priveste acum toata aplicatia, nu doar demo-ul asta, iar
+// doi proprietari pentru aceeasi clasa de pe <html> s-ar fi anulat reciproc. Restul
+// lectiei ramane neatins.
+
+import { useState, type CSSProperties } from "react";
+import { Button } from "@/components/ui/button";
 
 // Obiecte de stil normale, ca in pasii anteriori. CSSProperties e tipul pe care il
 // asteapta atributul `style` — cheile sunt in camelCase (borderRadius, nu
@@ -84,28 +90,19 @@ export function TailwindSetup() {
   // Un singur boolean pentru varianta afisata; textul explicativ de dedesubt e
   // DERIVAT din el, nu tinut inca o data in state.
   const [useTokens, setUseTokens] = useState(false);
-  const [dark, setDark] = useState(false);
-
-  // Tema e stare care traieste IN AFARA React-ului: o clasa pe <html>, un element
-  // pe care React nu-l randeaza. Exact cazul pentru useEffect — sincronizezi lumea
-  // externa cu state-ul. Cleanup-ul scoate clasa cand pleci de pe demo, ca sa nu
-  // ramana tema agatata de restul aplicatiei.
-  useEffect(() => {
-    const html = document.documentElement;
-    html.classList.toggle("dark", dark);
-    return () => html.classList.remove("dark");
-  }, [dark]);
 
   return (
     <div>
-      <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 16, flexWrap: "wrap" }}>
-        <button onClick={() => setUseTokens(false)} disabled={!useTokens}>
+      {/* Pas 10 — aceleasi doua butoane, dar varianta arata acum care e selectat.
+          Inainte foloseam `disabled` ca sa marcam selectia: butonul curent parea
+          stins, desi nu era vorba de o actiune indisponibila, ci de o stare activa. */}
+      <div className="mb-4 flex flex-wrap justify-center gap-2">
+        <Button variant={useTokens ? "secondary" : "default"} onClick={() => setUseTokens(false)}>
           Scris de mână (style)
-        </button>
-        <button onClick={() => setUseTokens(true)} disabled={useTokens}>
+        </Button>
+        <Button variant={useTokens ? "default" : "secondary"} onClick={() => setUseTokens(true)}>
           Tailwind pe tokeni
-        </button>
-        <button onClick={() => setDark(d => !d)}>{dark ? "☀️ Temă deschisă" : "🌙 Temă întunecată"}</button>
+        </Button>
       </div>
 
       {useTokens ? <TokenCard /> : <HandwrittenCard />}
@@ -123,8 +120,8 @@ export function TailwindSetup() {
       <p style={{ marginTop: 8 }}>
         <small>
           {useTokens
-            ? "În temă deschisă arată identic cu varianta de mână — oklch(0.985 0 0) CHIAR ESTE #fafafa. Comută tema: se adaptează singur, pentru că bg-card înseamnă var(--card), iar .dark rescrie variabila."
-            : "Comută tema: cardul rămâne alb. Culorile sunt scrise în el, nu citite din temă — și n-ai unde să le schimbi din afară, decât intrând în fiecare componentă."}
+            ? "În temă deschisă arată identic cu varianta de mână — oklch(0.985 0 0) CHIAR ESTE #fafafa. Comută tema din meniu: se adaptează singur, pentru că bg-card înseamnă var(--card), iar .dark rescrie variabila."
+            : "Comută tema din meniu (butonul cu luna): cardul rămâne alb. Culorile sunt scrise în el, nu citite din temă — și n-ai unde să le schimbi din afară, decât intrând în fiecare componentă."}
         </small>
       </p>
     </div>

@@ -22,6 +22,24 @@
   --muted-foreground: oklch(0.556 0 0);
   --primary: oklch(0.606 0.25 292.717);
   --primary-foreground: oklch(0.985 0 0);
+
+  /* Pas 10 — restul tokenilor, ceruti de clasele din button.tsx (paleta
+     "neutral"). Nu i-am luat pe incredere: --card si --primary de mai sus au
+     ramas cu valorile alese de noi la pasul 9 (shadcn ar fi pus un --primary
+     gri-inchis, si demo-ul de la pasul 9 nu mai arata la fel). Fisierul de
+     tokeni e al nostru — generatorul propune, noi decidem. */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  /* --ring e culoarea inelului de focus. Un singur token, dar el e jumatate din
+     motivul pentru care lectia asta exista: la butonul scris de mana nu exista. */
+  --ring: oklch(0.708 0 0);
 }
 
 /* Dark mode = clasa .dark pe <html>. Nu e o a doua foaie de stiluri: se
@@ -33,6 +51,19 @@
   --muted-foreground: oklch(0.708 0 0);
   --primary: oklch(0.72 0.19 293);
   --primary-foreground: oklch(0.21 0 0);
+
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --accent: oklch(0.371 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  /* In dark, bordura nu e o culoare fixa, ci alb cu 10% opacitate: se aseaza
+     peste orice fundal fara sa fie nevoie de cate un token per suprafata. */
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
 }
 
 /* Aici se nasc utilitarele: din --color-card, Tailwind genereaza bg-card,
@@ -49,6 +80,30 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+/* Utilitarul `border` din Tailwind v4 seteaza doar GROSIMEA; culoarea implicita e
+   currentColor, adica culoarea textului — o bordura violet la un buton outline.
+   Regula asta ii da o culoare implicita, ca in orice proiect shadcn.
+   E scrisa in @layer base intentionat: ce e intr-un layer pierde in fata a ce nu e
+   in niciun layer, deci nu poate strica stilurile shell-ului si nici pasii 1-8 (care
+   sunt nelayerati sau pe atributul `style`). Si oricum nu face nimic pe un element
+   fara border-width. */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
 }
 
 /* Compatibilitate cu pasii 1-8, si o lectie in sine despre ce inseamna "reset".
@@ -71,15 +126,24 @@ li:not([class]) {
   all: revert;
 }
 
+/* Pas 10 — o redenumire facuta din necesitate, nu din estetica.
+   Blocul asta e tema shell-ului de la pasii 1-8 si folosea numele --accent si
+   --border. Exact aceleasi doua nume le cere si shadcn/ui pentru tokenii lui.
+   Doua definitii :root cu acelasi nume nu dau eroare nicaieri — pur si simplu
+   castiga ultima din fisier, si o parte din aplicatie s-ar fi vopsit gresit fara
+   ca ceva sa se planga. Variabilele CSS sunt un namespace global fara compilator,
+   exact problema descrisa la pasul 9. Solutia: numele generice raman ale
+   sistemului de design (shadcn), iar cele vechi, specifice shell-ului, primesc
+   prefix. */
 :root {
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
-  --border: #e5e4e7;
+  --shell-border: #e5e4e7;
   --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
+  --brand: #aa3bff;
+  --brand-bg: rgba(170, 59, 255, 0.1);
+  --brand-border: rgba(170, 59, 255, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
   --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
@@ -111,11 +175,11 @@ li:not([class]) {
     --text: #9ca3af;
     --text-h: #f3f4f6;
     --bg: #16171d;
-    --border: #2e303a;
+    --shell-border: #2e303a;
     --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
+    --brand: #c084fc;
+    --brand-bg: rgba(192, 132, 252, 0.15);
+    --brand-border: rgba(192, 132, 252, 0.5);
     --social-bg: rgba(47, 48, 58, 0.5);
     --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
   }
@@ -130,7 +194,7 @@ li:not([class]) {
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
-  border-inline: 1px solid var(--border);
+  border-inline: 1px solid var(--shell-border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;

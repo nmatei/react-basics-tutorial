@@ -39,6 +39,7 @@ Reguli:
 - React 19
 - TypeScript
 - Tailwind CSS v4 (de la pasul 9; utility-first + tokeni de temă, fără `tailwind.config.js`)
+- shadcn/ui (de la pasul 10; nu e o dependență npm — componentele sunt **copiate** în `src/components/ui/`)
 - npm
 - Vitest + React Testing Library (doar de la lecția de testare)
 
@@ -72,8 +73,10 @@ Listă ordonată, ajustabilă pe parcurs.
 - [x] Pas 7 — Liste: `map` și `key` (meniul de navigare)
 - [x] Pas 8 — Alias de cale `@/` (importuri stabile, independente de adâncime)
 - [x] Pas 9 — Tailwind CSS v4: utility-first + tokeni de temă (`@theme inline`, dark mode pe clasa `.dark`)
-- [ ] Pas 10 — Randare condiționată (`&&`, ternar, early return)
-- [ ] Pas 11 — Formulare și input-uri controlate
+- [x] Pas 10 — shadcn/ui: componente copiate în proiect, variante cu `cva`, `cn()` pentru conflicte de clase
+- [ ] Pas 11 — Randare condiționată (`&&`, ternar, early return)
+- [ ] Pas 12 — Formulare și input-uri controlate
+- [ ] Pas 13 — Componente de compoziție (`children`, `asChild`, slot-uri)
 
 ## 7. Definiția de „lecție terminată”
 
@@ -96,5 +99,7 @@ O lecție este terminată când:
 - Backend, bază de date, autentificare
 - Deploy ca produs real
 - Librării de state management (Redux, Zustand, MobX)
-- Librării de componente UI gata făcute (MUI, Chakra, shadcn). Tailwind nu intră aici: nu livrează componente, ci doar utilitare CSS și un set fix de tokeni.
+- Librării de componente UI ca dependență opacă (MUI, Chakra) — componenta stă în `node_modules` și o poți doar configura prin API-ul expus.
+  - Excepție decisă la pasul 10: **shadcn/ui**, tocmai pentru că nu este o astfel de dependență. Comanda copiază codul sursă în `src/components/ui/`, unde rămâne al nostru — lizibil, modificabil, versionat în git. Din `node_modules` vin doar utilitare (`radix-ui`, `cva`, `clsx`, `tailwind-merge`, `lucide-react`).
+  - Tailwind nu intră aici: nu livrează componente, ci doar utilitare CSS și un set fix de tokeni.
 - SSR / Next.js

@@ -9,6 +9,7 @@ import { useState, type ReactNode } from "react";
 // aceleasi linii raman valide oriunde le-ai muta.
 import "@/App.css";
 import { DemoTab } from "@/components/DemoTab";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Welcome } from "@/components/Welcome";
 import { Counter } from "@/demos/Counter";
 import { CounterClass } from "@/demos/CounterClass";
@@ -17,6 +18,7 @@ import { LiftingState } from "@/demos/LiftingState";
 import { PathAlias } from "@/demos/PathAlias";
 import { PrettierFormat } from "@/demos/PrettierFormat";
 import { PureFunctions } from "@/demos/PureFunctions";
+import { ShadcnSetup } from "@/demos/ShadcnSetup";
 import { TailwindSetup } from "@/demos/TailwindSetup";
 import { Timer } from "@/demos/Timer";
 
@@ -34,13 +36,14 @@ const demos: Demo[] = [
   { id: "lifting-state", step: 6, title: "Lifting state up", element: <LiftingState /> },
   { id: "demo-menu", step: 7, title: "Liste: map și key", element: <DemoMenu /> },
   { id: "path-alias", step: 8, title: "Alias de cale @/", element: <PathAlias /> },
-  { id: "tailwind-setup", step: 9, title: "Tailwind CSS și tokeni de temă", element: <TailwindSetup /> }
+  { id: "tailwind-setup", step: 9, title: "Tailwind CSS și tokeni de temă", element: <TailwindSetup /> },
+  { id: "shadcn-setup", step: 10, title: "shadcn/ui — componente copiate în proiect", element: <ShadcnSetup /> }
 ];
 
 function App() {
   // Singura sursa de adevar a navigarii: ID-ul activ, un string. Se pierde la
   // refresh — useState traieste in memoria paginii, nu pe disc.
-  const [activeId, setActiveId] = useState("tailwind-setup");
+  const [activeId, setActiveId] = useState("shadcn-setup");
 
   // `?? demos[0]` face ca `active` sa nu fie niciodata undefined — asa evitam
   // `!` (non-null assertion), care e interzis in acest proiect. Demo-ul activ e
@@ -52,15 +55,10 @@ function App() {
       {/* `key` e citit de React ca sa potriveasca elementele intre doua randari;
           NU ajunge in DemoTab ca prop. Daca ai nevoie de id si inauntru, il pasezi
           separat. */}
-      <nav
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 12,
-          justifyContent: "center",
-          padding: "24px 16px"
-        }}
-      >
+      {/* Pas 10 — containerul meniului a trecut si el de la obiectul `style` la
+          utilitare. `items-center` tine butonul de tema aliniat cu tab-urile, care
+          sunt mai mici (size="sm"). */}
+      <nav className="flex flex-wrap items-center justify-center gap-3 px-4 py-6">
         {demos.map(d => (
           <DemoTab
             key={d.id}
@@ -73,6 +71,11 @@ function App() {
             onSelect={() => setActiveId(d.id)}
           />
         ))}
+
+        {/* Tema e a intregii aplicatii, deci comutatorul sta in shell, nu intr-un
+            demo. Nu primeste niciun prop: isi tine singur starea si scrie clasa pe
+            <html>, iar tokenii fac restul. */}
+        <ThemeToggle />
       </nav>
 
       <main>
