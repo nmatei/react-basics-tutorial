@@ -74,9 +74,11 @@ Listă ordonată, ajustabilă pe parcurs.
 - [x] Pas 8 — Alias de cale `@/` (importuri stabile, independente de adâncime)
 - [x] Pas 9 — Tailwind CSS v4: utility-first + tokeni de temă (`@theme inline`, dark mode pe clasa `.dark`)
 - [x] Pas 10 — shadcn/ui: componente copiate în proiect, variante cu `cva`, `cn()` pentru conflicte de clase
-- [ ] Pas 11 — Randare condiționată (`&&`, ternar, early return)
-- [ ] Pas 12 — Formulare și input-uri controlate
-- [ ] Pas 13 — Componente de compoziție (`children`, `asChild`, slot-uri)
+- [x] Pas 11 — Hooks custom (`useCounter`, `useWindowSize`): o funcție cu nume `use*`, o instanță de stare per APEL
+- [ ] Pas 12 — Randare condiționată (`&&`, ternar, early return)
+- [ ] Pas 13 — Formulare și input-uri controlate
+- [ ] Pas 14 — Componente de compoziție (`children`, `asChild`, slot-uri)
+- [ ] Pas 15 — Context API + un hook custom peste context (contra-exemplul pasului 11: o singură sursă partajată)
 
 ## 7. Definiția de „lecție terminată”
 

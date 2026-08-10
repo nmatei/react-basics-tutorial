@@ -13,6 +13,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Welcome } from "@/components/Welcome";
 import { Counter } from "@/demos/Counter";
 import { CounterClass } from "@/demos/CounterClass";
+import { CustomHooks } from "@/demos/CustomHooks";
 import { DemoMenu } from "@/demos/DemoMenu";
 import { LiftingState } from "@/demos/LiftingState";
 import { PathAlias } from "@/demos/PathAlias";
@@ -37,13 +38,14 @@ const demos: Demo[] = [
   { id: "demo-menu", step: 7, title: "Liste: map și key", element: <DemoMenu /> },
   { id: "path-alias", step: 8, title: "Alias de cale @/", element: <PathAlias /> },
   { id: "tailwind-setup", step: 9, title: "Tailwind CSS și tokeni de temă", element: <TailwindSetup /> },
-  { id: "shadcn-setup", step: 10, title: "shadcn/ui — componente copiate în proiect", element: <ShadcnSetup /> }
+  { id: "shadcn-setup", step: 10, title: "shadcn/ui — componente copiate în proiect", element: <ShadcnSetup /> },
+  { id: "custom-hooks", step: 11, title: "Hooks custom", element: <CustomHooks /> }
 ];
 
 function App() {
   // Singura sursa de adevar a navigarii: ID-ul activ, un string. Se pierde la
   // refresh — useState traieste in memoria paginii, nu pe disc.
-  const [activeId, setActiveId] = useState("shadcn-setup");
+  const [activeId, setActiveId] = useState("custom-hooks");
 
   // `?? demos[0]` face ca `active` sa nu fie niciodata undefined — asa evitam
   // `!` (non-null assertion), care e interzis in acest proiect. Demo-ul activ e
