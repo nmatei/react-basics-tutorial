@@ -84,19 +84,19 @@ const demos: Demo[] = [
 plus the active id in state, and the lookup:
 
 ```ts
-const [activeId] = useState("counter");
+const [activeId, setActiveId] = useState("counter");
 const active = demos.find(d => d.id === activeId) ?? demos[0];
 ```
 
 The `?? demos[0]` fallback exists so `active` is never `undefined` — that is what lets us avoid a non-null assertion (`!`), which is banned.
 
-The setter is intentionally not destructured yet: `noUnusedLocals` would fail the build, and nothing can call it until the navigation menu exists. Until then, switching steps means editing the initial id. Add `setActiveId` in the same commit as the menu, not before.
+The single source of truth for navigation is the active **id**. The rest of the UI is derived from it — never keep both the list and the selected element in state.
 
 - **Adding a step = one new file in `src/demos/` + one new entry in `demos`. Nothing else changes.**
 - The shell renders the heading `Pas N — Titlu` from `active.step` / `active.title`. A demo renders **only its own content** and never its own title.
 - Steps already in place must keep working as the app grows.
 - `App.tsx` must stay short. Past ~100 lines, something in it belongs in `components/`.
-- The navigation menu is built later, once there are enough demos to justify it. Until then the registry alone is enough — building it now would need `map` and `key`, concepts the user has not reached.
+- The navigation menu is a `<nav>` with `demos.map`, rendering one `DemoTab` per entry (`components/DemoTab.tsx`). It is derived from the registry, so a new step never touches it.
 - Registry slot 1 is the Vite landing page, which demonstrates no concept: it lives in `components/Welcome.tsx`, not in `demos/`. Every other entry points at a file in `demos/`.
 - The active step lives in `useState` until the React Router lesson (step 19) replaces it.
 

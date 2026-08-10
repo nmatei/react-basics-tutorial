@@ -67,10 +67,10 @@ export function LiftingState() {
         {/* Cardul „nativ”: citeste starea direct si o scrie direct. `setAmount`
             este pasat ca valoare (fara paranteze) — pasezi functia, nu rezultatul
             apelului ei. */}
-        <PriceCard 
+        <PriceCard
           // first card
-          label="Sumă" 
-          amount={amount} 
+          label="Sumă"
+          amount={amount}
           currency="RON"
           onChange={setAmount}
         />

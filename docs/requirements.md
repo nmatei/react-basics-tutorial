@@ -54,7 +54,7 @@ O singură aplicație care crește pas cu pas: fiecare concept studiat devine un
 - Fiecare concept trăiește într-un fișier propriu: `src/demos/<Concept>.tsx` (ex. `Counter.tsx`, `Timer.tsx`).
 - Restul structurii: `src/components/` (partajat între pași), `src/hooks/` (un hook per fișier), `src/context/` (un provider + hook-ul lui, per fișier), `src/lib/` (helperi mici).
 - Adăugarea unui pas = un fișier nou în `src/demos/` + o singură intrare în registru. Nimic altceva nu se modifică.
-- Pasul activ este ținut inițial în `useState`; migrarea la React Router este ea însăși o lecție ulterioară (§6, pasul 19). Meniul de navigare se construiește când există suficiente demo-uri.
+- Pasul activ este ținut în `useState`, iar meniul de navigare se derivă din registru cu `map`; migrarea la React Router este ea însăși o lecție ulterioară (§6, pasul 19).
 - Pașii deja existenți trebuie să rămână funcționali pe măsură ce aplicația crește.
 
 ## 6. Traseul conceptelor
@@ -67,7 +67,8 @@ Listă ordonată, ajustabilă pe parcurs.
 - [x] Pas 4 — Prettier + format on save (configurare proiect)
 - [x] Pas 5 — useEffect și cleanup (Timer)
 - [x] Pas 6 — Lifting state up (o singură sursă de adevăr, componentă controlată)
-- [ ] Pas 7 — Liste: `map` și `key`
+- [x] Pas 7 — Liste: `map` și `key` (meniul de navigare)
+- [ ] Pas 8 — Randare condiționată (`&&`, ternar, early return)
 
 ## 7. Definiția de „lecție terminată”
 

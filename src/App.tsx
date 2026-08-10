@@ -1,11 +1,15 @@
 // Shell-ul aplicatiei: tine registrul de demo-uri si pasul activ, niciodata
 // codul unui demo. Un pas nou = un fisier in src/demos/ + o intrare in `demos`.
+// Meniul nu se mai scrie de mana: se DERIVA din registru cu `map`, deci creste
+// singur la fiecare intrare noua.
 
 import { useState, type ReactNode } from "react";
 import "./App.css";
+import { DemoTab } from "./components/DemoTab";
 import { Welcome } from "./components/Welcome";
 import { Counter } from "./demos/Counter";
 import { CounterClass } from "./demos/CounterClass";
+import { DemoMenu } from "./demos/DemoMenu";
 import { LiftingState } from "./demos/LiftingState";
 import { PrettierFormat } from "./demos/PrettierFormat";
 import { PureFunctions } from "./demos/PureFunctions";
@@ -22,29 +26,54 @@ const demos: Demo[] = [
   { id: "pure-functions", step: 3, title: "Funcții pure", element: <PureFunctions /> },
   { id: "prettier-format", step: 4, title: "Prettier și formatare automată", element: <PrettierFormat /> },
   { id: "timer", step: 5, title: "useEffect și cleanup", element: <Timer /> },
-  { id: "lifting-state", step: 6, title: "Lifting state up", element: <LiftingState /> }
+  { id: "lifting-state", step: 6, title: "Lifting state up", element: <LiftingState /> },
+  { id: "demo-menu", step: 7, title: "Liste: map și key", element: <DemoMenu /> }
 ];
 
 function App() {
-  // Setter-ul lipseste inca: meniul de navigare vine cu o lecție ulterioara.
-  // Pana atunci schimbi pasul activ modificand id-ul de aici.
-  const [activeId, setActiveId] = useState("lifting-state");
+  // Singura sursa de adevar a navigarii: ID-ul activ, un string. Se pierde la
+  // refresh — useState traieste in memoria paginii, nu pe disc.
+  const [activeId, setActiveId] = useState("demo-menu");
 
   // `?? demos[0]` face ca `active` sa nu fie niciodata undefined — asa evitam
-  // `!` (non-null assertion), care e interzis in acest proiect.
+  // `!` (non-null assertion), care e interzis in acest proiect. Demo-ul activ e
+  // DERIVAT din id, nu tinut inca o data in state.
   const active = demos.find(d => d.id === activeId) ?? demos[0];
 
   return (
     <>
-      <h1>
-        Pas {active.step} — {active.title}
-      </h1>
-      <div style={{ marginBottom: 16 }}>
-        <button onClick={() => setActiveId("counter")}>Step 2</button>
-        <button onClick={() => setActiveId("timer")}>Step 5</button>
-        <button onClick={() => setActiveId("lifting-state")}>Step 6</button>
-      </div>
-      {active.element}
+      {/* `key` e citit de React ca sa potriveasca elementele intre doua randari;
+          NU ajunge in DemoTab ca prop. Daca ai nevoie de id si inauntru, il pasezi
+          separat. */}
+      <nav
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 12,
+          justifyContent: "center",
+          padding: "24px 16px"
+        }}
+      >
+        {demos.map(d => (
+          <DemoTab
+            key={d.id}
+            //step={d.step % 2 === 0 ? d.step : undefined}
+            step={d.step}
+            title={d.title}
+            active={d.id === active.id}
+            // Arrow function, nu `onSelect={setActiveId(d.id)}`: al doilea ar APELA
+            // setter-ul in timpul randarii. Pasezi ce sa se intample la click.
+            onSelect={() => setActiveId(d.id)}
+          />
+        ))}
+      </nav>
+
+      <main>
+        <h1>
+          Pas {active.step} — {active.title}
+        </h1>
+        {active.element}
+      </main>
     </>
   );
 }
