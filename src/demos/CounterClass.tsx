@@ -18,7 +18,9 @@ export class CounterClass extends Component<object, CounterClassState> {
   }
 
   reset = () => {
-    this.setState({ count: 0 })
+    this.setState({ 
+      count: 0
+    })
     
     //this.state.count = 0 // this is not a good practice...
   }

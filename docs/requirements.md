@@ -61,6 +61,12 @@ O singură aplicație care crește pas cu pas: fiecare concept studiat devine un
 
 Listă ordonată, ajustabilă pe parcurs.
 
+- [x] Pas 1 — Structura proiectului (shell + registru de demo-uri)
+- [x] Pas 2 — useState (funcțional + varianta cu clasă)
+- [x] Pas 3 — Funcții pure vs impure în context React
+- [x] Pas 4 — Prettier + format on save (configurare proiect)
+- [ ] Pas 5 — randare listă cu `map` și `key` (fundamentul meniului de pași)
+
 ## 7. Definiția de „lecție terminată”
 
 O lecție este terminată când:
