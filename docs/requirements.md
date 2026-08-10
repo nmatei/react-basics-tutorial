@@ -65,6 +65,9 @@ Listă ordonată, ajustabilă pe parcurs.
 - [x] Pas 2 — useState (funcțional + varianta cu clasă)
 - [x] Pas 3 — Funcții pure vs impure în context React
 - [x] Pas 4 — Prettier + format on save (configurare proiect)
+- [x] Pas 5 — useEffect și cleanup (Timer)
+- [x] Pas 6 — Lifting state up (o singură sursă de adevăr, componentă controlată)
+- [ ] Pas 7 — Liste: `map` și `key`
 
 ## 7. Definiția de „lecție terminată”
 

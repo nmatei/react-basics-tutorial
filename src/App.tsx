@@ -6,6 +6,7 @@ import "./App.css";
 import { Welcome } from "./components/Welcome";
 import { Counter } from "./demos/Counter";
 import { CounterClass } from "./demos/CounterClass";
+import { LiftingState } from "./demos/LiftingState";
 import { PrettierFormat } from "./demos/PrettierFormat";
 import { PureFunctions } from "./demos/PureFunctions";
 import { Timer } from "./demos/Timer";
@@ -20,13 +21,14 @@ const demos: Demo[] = [
   { id: "counter-class", step: 2, title: "useState — varianta veche, cu clasa", element: <CounterClass /> },
   { id: "pure-functions", step: 3, title: "Funcții pure", element: <PureFunctions /> },
   { id: "prettier-format", step: 4, title: "Prettier și formatare automată", element: <PrettierFormat /> },
-  { id: "timer", step: 5, title: "useEffect și cleanup", element: <Timer /> }
+  { id: "timer", step: 5, title: "useEffect și cleanup", element: <Timer /> },
+  { id: "lifting-state", step: 6, title: "Lifting state up", element: <LiftingState /> }
 ];
 
 function App() {
   // Setter-ul lipseste inca: meniul de navigare vine cu o lecție ulterioara.
   // Pana atunci schimbi pasul activ modificand id-ul de aici.
-  const [activeId, setActiveId] = useState("timer");
+  const [activeId, setActiveId] = useState("lifting-state");
 
   // `?? demos[0]` face ca `active` sa nu fie niciodata undefined — asa evitam
   // `!` (non-null assertion), care e interzis in acest proiect.
@@ -40,6 +42,7 @@ function App() {
       <div style={{ marginBottom: 16 }}>
         <button onClick={() => setActiveId("counter")}>Step 2</button>
         <button onClick={() => setActiveId("timer")}>Step 5</button>
+        <button onClick={() => setActiveId("lifting-state")}>Step 6</button>
       </div>
       {active.element}
     </>
