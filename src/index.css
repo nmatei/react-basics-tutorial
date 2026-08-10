@@ -1,3 +1,76 @@
+/* Un singur import aduce tot Tailwind-ul (reset + utilitare). @import trebuie sa
+   fie PRIMA regula din fisier — asa cere CSS-ul, nu Tailwind.
+   Tailwind isi pune tot continutul in @layer. Regula din CSS: ce e in layer pierde
+   in fata a ce NU e in layer, indiferent de ordine sau specificitate. Stilurile
+   noastre de mai jos nu sunt intr-un layer, deci raman peste reset-ul Tailwind si
+   pasii 1-8 arata la fel. */
+@import "tailwindcss";
+
+/* Pas 9 — tokenii temei. Doi pasi, si merita tinuti separati in cap:
+   1. variabilele BRUTE (--card, --primary...) — aici se schimba valorile;
+   2. @theme inline, mai jos — traduce variabilele in utilitare Tailwind.
+   Culorile sunt in OKLCH: lightness / chroma / hue, unde lightness corespunde cu
+   ce percepe ochiul (spre deosebire de HSL). Doua culori cu acelasi prim numar
+   arata la fel de inchise, deci o paleta coerenta se construieste schimband un
+   singur numar. */
+:root {
+  /* oklch(0.985 0 0) e exact #fafafa, iar oklch(0.145 0 0) e exact #171717 —
+     aceleasi culori pe care le hardcodeaza varianta "de mana" din demo. In tema
+     deschisa cele doua carduri sunt identice; diferenta apare abia in dark. */
+  --card: oklch(0.985 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --primary: oklch(0.606 0.25 292.717);
+  --primary-foreground: oklch(0.985 0 0);
+}
+
+/* Dark mode = clasa .dark pe <html>. Nu e o a doua foaie de stiluri: se
+   RESCRIU aceleasi variabile, iar cascada CSS duce noile valori peste tot.
+   Nicio componenta React nu afla ca s-a schimbat tema. */
+.dark {
+  --card: oklch(0.21 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --primary: oklch(0.72 0.19 293);
+  --primary-foreground: oklch(0.21 0 0);
+}
+
+/* Aici se nasc utilitarele: din --color-card, Tailwind genereaza bg-card,
+   text-card, border-card etc. Numele trebuie sa inceapa cu --color-*, altfel nu
+   e recunoscut ca o culoare.
+   `inline` e cuvantul-cheie al intregii lectii. FARA el, Tailwind ar ingheta
+   valoarea de light in regula generata: `background: oklch(0.985 0 0)` — si
+   .dark n-ar mai avea ce schimba. CU el, regula devine
+   `background: var(--card)`, deci se rezolva la randare, in functie de unde se
+   afla elementul in arbore. De asta nu e nevoie de --card-dark, --card-light. */
+@theme inline {
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+}
+
+/* Compatibilitate cu pasii 1-8, si o lectie in sine despre ce inseamna "reset".
+   Tailwind aduce si Preflight: un reset care dezbraca elementele native de stilul
+   implicit al browserului — butoanele raman fara rama si fara fundal, listele fara
+   bulinute, input-urile fara contur. Are sens intr-un proiect scris integral in
+   utilitare (pornesti de la zero peste tot), dar pasii nostri vechi se bazeaza
+   exact pe acele valori implicite.
+   `all: revert` intoarce elementul la foaia de stil a BROWSERULUI, anuland ce a
+   scris autorul — deci si Preflight-ul. Merge pentru ca regula asta NU e intr-un
+   @layer, iar CSS-ul nelayerat bate orice layer.
+   `:not([class])` limiteaza reparatia la elementele fara clasa, adica exact la
+   codul vechi. Un buton cu utilitare Tailwind pastreaza reset-ul si se stilizeaza
+   singur. Stilurile din atributul `style` nu sunt afectate: inline bate orice
+   regula din foaia de stil. */
+button:not([class]),
+input:not([class]),
+ul:not([class]),
+li:not([class]) {
+  all: revert;
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -29,6 +102,10 @@
   }
 }
 
+/* Atentie: doua mecanisme diferite de tema traiesc in acest fisier. Blocul de
+   mai jos (stilurile vechi ale shell-ului) asculta de SISTEM si nu poate fi
+   comutat din aplicatie. Tokenii de la pasul 9 asculta de clasa .dark, deci ii
+   comuti dintr-un buton. */
 @media (prefers-color-scheme: dark) {
   :root {
     --text: #9ca3af;

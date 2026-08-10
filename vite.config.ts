@@ -1,10 +1,16 @@
 import path from "node:path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  // Pas 9 — Tailwind v4 se instaleaza ca plugin de Vite, nu ca pas de PostCSS.
+  // Plugin-ul face doua lucruri: citeste `@import "tailwindcss"` din index.css si
+  // SCANEAZA fisierele sursa ca text simplu, cautand nume de clase. Genereaza CSS
+  // doar pentru clasele gasite scrise literal — de aceea `bg-${culoare}` nu
+  // functioneaza niciodata: scanerul citeste text, nu executa JavaScript.
+  plugins: [react(), tailwindcss()],
   // Path alias — jumatatea "bundler" a aliasului @/: rezolvarea reala a
   // fisierului pe disc, la `npm run dev` si la `vite build`. Fara ea, tipurile
   // sunt verzi in editor dar build-ul crapa cu "Failed to resolve import".

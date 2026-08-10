@@ -33,7 +33,7 @@ For every concept, in this order: **explain → answer questions → write code 
 
 ## Stack & commands
 
-Vite · React 19 · TypeScript · npm. Vitest + React Testing Library are added only when the testing lesson is reached. Do not add other dependencies without an explicit, discussed reason.
+Vite · React 19 · TypeScript · Tailwind CSS v4 · npm. Vitest + React Testing Library are added only when the testing lesson is reached. Do not add other dependencies without an explicit, discussed reason.
 
 ```bash
 npm install
@@ -126,6 +126,16 @@ The alias is declared in **two** places that must be kept in sync by hand — th
 Adding another alias means editing both. `baseUrl` is deliberately absent — deprecated in TypeScript 6, and `paths` resolves relative to the tsconfig without it. `import.meta.dirname`, not `__dirname` — the project is ESM and Vite 8 warns on the CommonJS form.
 
 Everything the alias does **not** cover, so it isn't hunted for in the wrong place: `index.html`, `url()` inside CSS, and `tsconfig.node.json` (which only covers `vite.config.ts` itself).
+
+### Styling
+
+From step 9 onward, **new markup is styled with Tailwind utilities on theme tokens** — `bg-card`, `text-muted-foreground`, `bg-primary` — not with `style={...}` and not with new hand-written class names. Steps 1–8 keep their inline styles; they are not retrofitted, because their code is part of a lesson already learned.
+
+- The tokens live in `src/index.css`: raw variables in `:root` / `.dark` (OKLCH), exposed as utilities through `@theme inline`. `inline` is what makes `bg-card` compile to `background: var(--card)` — without it the light value would be frozen in and dark mode would do nothing.
+- Dark mode is the `.dark` class on `<html>`. No component ever reads the theme.
+- A new color/spacing value is added as a token first, then used. An arbitrary value in square brackets — a raw hex or px inlined into a utility — is a smell, not a solution.
+- Tailwind v4 has **no `tailwind.config.js`** — configuration is CSS (`@theme`), and the scanner reads source files as plain text, so a class name must appear literally (`` `bg-${color}` `` never works). The flip side: the scanner also reads Markdown, so an example class name written in prose really does end up compiled into the bundle. Describe such classes in words instead of spelling them out.
+- `src/index.css` carries an unlayered `all: revert` rule for class-less `button` / `input` / `ul` / `li`, which shields steps 1–8 from Tailwind's Preflight reset. Do not delete it while those steps still rely on native element styling.
 
 ### Comments
 

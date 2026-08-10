@@ -17,6 +17,7 @@ import { LiftingState } from "@/demos/LiftingState";
 import { PathAlias } from "@/demos/PathAlias";
 import { PrettierFormat } from "@/demos/PrettierFormat";
 import { PureFunctions } from "@/demos/PureFunctions";
+import { TailwindSetup } from "@/demos/TailwindSetup";
 import { Timer } from "@/demos/Timer";
 
 // ReactNode = orice poate fi randat (element, text, null). `element` chiar tine
@@ -32,13 +33,14 @@ const demos: Demo[] = [
   { id: "timer", step: 5, title: "useEffect și cleanup", element: <Timer /> },
   { id: "lifting-state", step: 6, title: "Lifting state up", element: <LiftingState /> },
   { id: "demo-menu", step: 7, title: "Liste: map și key", element: <DemoMenu /> },
-  { id: "path-alias", step: 8, title: "Alias de cale @/", element: <PathAlias /> }
+  { id: "path-alias", step: 8, title: "Alias de cale @/", element: <PathAlias /> },
+  { id: "tailwind-setup", step: 9, title: "Tailwind CSS și tokeni de temă", element: <TailwindSetup /> }
 ];
 
 function App() {
   // Singura sursa de adevar a navigarii: ID-ul activ, un string. Se pierde la
   // refresh — useState traieste in memoria paginii, nu pe disc.
-  const [activeId, setActiveId] = useState("path-alias");
+  const [activeId, setActiveId] = useState("tailwind-setup");
 
   // `?? demos[0]` face ca `active` sa nu fie niciodata undefined — asa evitam
   // `!` (non-null assertion), care e interzis in acest proiect. Demo-ul activ e

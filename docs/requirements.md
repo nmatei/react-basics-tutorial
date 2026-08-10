@@ -38,6 +38,7 @@ Reguli:
 - Vite
 - React 19
 - TypeScript
+- Tailwind CSS v4 (de la pasul 9; utility-first + tokeni de temă, fără `tailwind.config.js`)
 - npm
 - Vitest + React Testing Library (doar de la lecția de testare)
 
@@ -70,7 +71,9 @@ Listă ordonată, ajustabilă pe parcurs.
 - [x] Pas 6 — Lifting state up (o singură sursă de adevăr, componentă controlată)
 - [x] Pas 7 — Liste: `map` și `key` (meniul de navigare)
 - [x] Pas 8 — Alias de cale `@/` (importuri stabile, independente de adâncime)
-- [ ] Pas 9 — Randare condiționată (`&&`, ternar, early return)
+- [x] Pas 9 — Tailwind CSS v4: utility-first + tokeni de temă (`@theme inline`, dark mode pe clasa `.dark`)
+- [ ] Pas 10 — Randare condiționată (`&&`, ternar, early return)
+- [ ] Pas 11 — Formulare și input-uri controlate
 
 ## 7. Definiția de „lecție terminată”
 
@@ -93,5 +96,5 @@ O lecție este terminată când:
 - Backend, bază de date, autentificare
 - Deploy ca produs real
 - Librării de state management (Redux, Zustand, MobX)
-- Librării de UI (MUI, Chakra, shadcn)
+- Librării de componente UI gata făcute (MUI, Chakra, shadcn). Tailwind nu intră aici: nu livrează componente, ci doar utilitare CSS și un set fix de tokeni.
 - SSR / Next.js
