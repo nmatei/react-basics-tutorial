@@ -20,6 +20,7 @@
 // deturnat toate pachetele scoped.
 
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 // Cele doua constante de mai jos contin ACELEASI patru importuri, scrise in cele
 // doua stiluri. Fisierul din exemplu e ipotetic, ales pentru adancime: din
@@ -56,20 +57,13 @@ type CodeProps = { children: string };
 
 // <pre> pastreaza spatiile si newline-urile exact cum sunt in string; intr-un
 // <div> obisnuit browserul le-ar colapsa intr-un singur spatiu.
+// Pas de curatare — culorile erau scrise de mana (#1e1e1e pe #d4d4d4), deci
+// blocul rămânea inchis si pe tema deschisa, si arata altfel decat blocurile de
+// cod din restul aplicatiei. Acum sunt aceleasi utilitare pe tokeni ca in
+// components/CodeBlock.tsx.
 function Code({ children }: CodeProps) {
   return (
-    <pre
-      style={{
-        margin: 0,
-        padding: 12,
-        borderRadius: 8,
-        background: "#1e1e1e",
-        color: "#d4d4d4",
-        fontSize: 13,
-        lineHeight: 1.5,
-        overflowX: "auto"
-      }}
-    >
+    <pre className="bg-secondary text-secondary-foreground overflow-x-auto rounded-lg p-4 text-xs leading-relaxed">
       {children}
     </pre>
   );
@@ -78,21 +72,18 @@ function Code({ children }: CodeProps) {
 type ConfigCardProps = { file: string; who: string; what: string; missing: string; snippet: string };
 
 function ConfigCard({ file, who, what, missing, snippet }: ConfigCardProps) {
+  // Pas de curatare — acelasi card ca in pasii 10-12 (bg-card + border pe
+  // tokeni), si un singur gap pe container in loc de patru margini scrise una
+  // cate una pe fiecare paragraf.
   return (
-    <div style={{ border: "1px solid #888", borderRadius: 8, padding: 16, flex: "1 1 320px", textAlign: "left" }}>
+    <div className="bg-card text-card-foreground flex flex-col gap-2 rounded-xl border p-6 text-left">
       <div>
         <code>{file}</code>
       </div>
-      <p style={{ margin: "8px 0 4px" }}>
-        <small>Cine îl citește: {who}</small>
-      </p>
-      <p style={{ margin: "0 0 12px" }}>
-        <small>La ce servește: {what}</small>
-      </p>
+      <p className="text-muted-foreground text-sm">Cine îl citește: {who}</p>
+      <p className="text-muted-foreground text-sm">La ce servește: {what}</p>
       <Code>{snippet}</Code>
-      <p style={{ marginBottom: 0 }}>
-        <small>⚠️ Dacă lipsește: {missing}</small>
-      </p>
+      <p className="text-muted-foreground text-sm">⚠️ Dacă lipsește: {missing}</p>
     </div>
   );
 }
@@ -102,37 +93,37 @@ export function PathAlias() {
   // codul din <pre>) e DERIVAT din el, nu tinut inca o data in state.
   const [useAlias, setUseAlias] = useState(false);
 
+  // Pas de curatare — butoanele vin din librarie, iar spatiile stau pe container.
+  // `disabled` a RAMAS neatins, desi la pasul 10 am invatat ca selectia se
+  // exprima cu o varianta: schimbarea l-ar face pe butonul curent clicabil, deci
+  // ar fi o schimbare de comportament, nu de aspect. E notata in raport.
   return (
-    <div>
-      <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 16 }}>
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 pb-8 text-left">
+      <div className="flex flex-wrap items-center gap-2">
         {/* Arrow function, nu `onClick={setUseAlias(false)}`: a doua varianta ar
             APELA setter-ul in timpul randarii, nu la click. */}
-        <button onClick={() => setUseAlias(false)} disabled={!useAlias}>
+        <Button type="button" variant="outline" size="sm" onClick={() => setUseAlias(false)} disabled={!useAlias}>
           Fără alias (relativ)
-        </button>
-        <button onClick={() => setUseAlias(true)} disabled={useAlias}>
+        </Button>
+        <Button type="button" variant="outline" size="sm" onClick={() => setUseAlias(true)} disabled={useAlias}>
           Cu alias @/
-        </button>
+        </Button>
       </div>
 
       <Code>{useAlias ? ALIAS_IMPORTS : RELATIVE_IMPORTS}</Code>
 
-      <p>
-        <small>
-          {useAlias
-            ? "Același string din orice fișier. Muți Bubble.tsx oriunde — importurile rămân corecte."
-            : "Valid într-un singur loc din proiect. Muți fișierul un nivel mai sus și toate patru se rup."}
-        </small>
+      <p className="text-muted-foreground text-sm">
+        {useAlias
+          ? "Același string din orice fișier. Muți Bubble.tsx oriunde — importurile rămân corecte."
+          : "Valid într-un singur loc din proiect. Muți fișierul un nivel mai sus și toate patru se rup."}
       </p>
 
-      <p>
-        <small>
-          Aliasul are nevoie de DOUĂ configurări, pentru că două programe complet independente citesc importurile și
-          niciunul nu se uită în configul celuilalt:
-        </small>
+      <p className="text-muted-foreground text-sm">
+        Aliasul are nevoie de DOUĂ configurări, pentru că două programe complet independente citesc importurile și
+        niciunul nu se uită în configul celuilalt:
       </p>
 
-      <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "flex-start" }}>
+      <div className="grid gap-4 sm:grid-cols-2">
         <ConfigCard
           file="tsconfig.app.json"
           who="TypeScript (tsc -b) și, prin el, editorul"

@@ -14,6 +14,7 @@
 // -> memory leak, fara nicio eroare in consola.
 
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 // Contor la nivel de MODUL: da un ID fiecarui abonament, ca sa se vada in
 // consola cate sunt active. La Pasul 3 am spus ca o variabila de modul care se
@@ -129,26 +130,28 @@ export function Timer() {
     };
   }, []);
 
+  // Pas de curatare — acelasi invelis ca la contoarele pasului 2 (aceeasi
+  // latime, acelasi gap pe container, aceeasi marime pentru numarul mare).
   return (
-    <div>
-      <p style={{ fontSize: 64, margin: 0 }}>{seconds}s</p>
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 pb-8 text-left">
+      <p className="text-foreground text-6xl leading-none font-semibold">{seconds}s</p>
 
-      <button type="button" onClick={() => setRunning(r => !r)}>
-        {running ? "Pauză" : "Pornește"}
-      </button>
+      <div className="flex flex-wrap items-center gap-2">
+        <Button type="button" size="sm" onClick={() => setRunning(r => !r)}>
+          {running ? "Pauză" : "Pornește"}
+        </Button>
 
-      {/* Reset atinge doar `seconds`. `running` nu se schimba, deci efectul NU
-          se re-ruleaza si intervalul curent continua neatins. */}
-      <button type="button" onClick={() => setSeconds(0)}>
-        Reset
-      </button>
+        {/* Reset atinge doar `seconds`. `running` nu se schimba, deci efectul NU
+            se re-ruleaza si intervalul curent continua neatins. */}
+        <Button type="button" variant="ghost" size="sm" onClick={() => setSeconds(0)}>
+          Reset
+        </Button>
+      </div>
 
-      <p>
-        <small>
-          Deschide consola. La intrare vezi efect → cleanup → efect, pentru ca StrictMode monteaza de doua ori in dev:
-          cleanup-ul ruleaza mereu ÎNAINTEA re-rularii efectului, deci nu exista doua intervale in paralel. Apasa apoi
-          Pauză / Pornește si urmarește aceeași ordine. Click oriunde in pagina → randurile `track click`.
-        </small>
+      <p className="text-muted-foreground text-sm">
+        Deschide consola. La intrare vezi efect → cleanup → efect, pentru ca StrictMode monteaza de doua ori in dev:
+        cleanup-ul ruleaza mereu ÎNAINTEA re-rularii efectului, deci nu exista doua intervale in paralel. Apasa apoi
+        Pauză / Pornește si urmarește aceeași ordine. Click oriunde in pagina → randurile `track click`.
       </p>
     </div>
   );

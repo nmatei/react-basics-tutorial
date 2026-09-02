@@ -37,7 +37,6 @@ import { Button } from "@/components/ui/button";
 // border-radius), pentru ca sunt proprietati de obiect JS, nu CSS scris ca text.
 const CARD: CSSProperties = {
   maxWidth: 360,
-  margin: "0 auto",
   padding: 24,
   borderRadius: 12,
   textAlign: "left",
@@ -72,11 +71,14 @@ function HandwrittenCard() {
 // Exact acelasi card, aceleasi valori — dar exprimate ca utilitare pe tokenii temei.
 // max-w-90 = 90 x 0.25rem = 360px, p-6 = 24px, rounded-xl = 12px: numerele nu sunt
 // pixeli, sunt trepte din scala de spacing.
+// Pas de curatare — `mx-auto` (si `margin: "0 auto"` din varianta de mana) au fost
+// scoase din AMBELE carduri, ca sa se alinieze cu restul ecranului. Cele doua
+// variante au rămas identice intre ele, deci comparatia lectiei e neatinsa.
 // `border-card-foreground/10` arata modificatorul de opacitate: `/10` cere 10% din
 // token, deci pana si bordura ramane derivata din tema, nu inventata.
 function TokenCard() {
   return (
-    <div className="border-card-foreground/10 bg-card text-card-foreground mx-auto max-w-90 rounded-xl border p-6 text-left">
+    <div className="border-card-foreground/10 bg-card text-card-foreground max-w-90 rounded-xl border p-6 text-left">
       <div className="mb-2 text-lg font-semibold">Plan Pro</div>
       <p className="text-muted-foreground mb-4 text-sm">Toate demo-urile, actualizari incluse.</p>
       <button className="bg-primary text-primary-foreground cursor-pointer rounded-lg px-4 py-2 text-sm">
@@ -91,38 +93,38 @@ export function TailwindSetup() {
   // DERIVAT din el, nu tinut inca o data in state.
   const [useTokens, setUseTokens] = useState(false);
 
+  // Pas de curatare — s-a atins doar CADRUL demo-ului (invelisul, gap-ul pe
+  // container, marimea butoanelor si a notelor de dedesubt). Cele doua carduri au
+  // ramas neatinse INTENTIONAT: cardul scris de mana, cu #fafafa si #171717 in el,
+  // e chiar lectia — daca l-am pune pe tokeni, comparatia n-ar mai exista.
   return (
-    <div>
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 pb-8 text-left">
       {/* Pas 10 — aceleasi doua butoane, dar varianta arata acum care e selectat.
           Inainte foloseam `disabled` ca sa marcam selectia: butonul curent parea
           stins, desi nu era vorba de o actiune indisponibila, ci de o stare activa. */}
-      <div className="mb-4 flex flex-wrap justify-center gap-2">
-        <Button variant={useTokens ? "secondary" : "default"} onClick={() => setUseTokens(false)}>
+      <div className="flex flex-wrap items-center gap-2">
+        <Button variant={useTokens ? "secondary" : "default"} size="sm" onClick={() => setUseTokens(false)}>
           Scris de mână (style)
         </Button>
-        <Button variant={useTokens ? "default" : "secondary"} onClick={() => setUseTokens(true)}>
+        <Button variant={useTokens ? "default" : "secondary"} size="sm" onClick={() => setUseTokens(true)}>
           Tailwind pe tokeni
         </Button>
       </div>
 
       {useTokens ? <TokenCard /> : <HandwrittenCard />}
 
-      <p style={{ marginTop: 16 }}>
-        <small>
-          {useTokens ? (
-            <code>bg-card text-card-foreground text-muted-foreground bg-primary</code>
-          ) : (
-            <code>background: "#fafafa"; color: "#171717"; color: "#737373"</code>
-          )}
-        </small>
+      <p className="text-muted-foreground text-sm">
+        {useTokens ? (
+          <code>bg-card text-card-foreground text-muted-foreground bg-primary</code>
+        ) : (
+          <code>background: "#fafafa"; color: "#171717"; color: "#737373"</code>
+        )}
       </p>
 
-      <p style={{ marginTop: 8 }}>
-        <small>
-          {useTokens
-            ? "În temă deschisă arată identic cu varianta de mână — oklch(0.985 0 0) CHIAR ESTE #fafafa. Comută tema din meniu: se adaptează singur, pentru că bg-card înseamnă var(--card), iar .dark rescrie variabila."
-            : "Comută tema din meniu (butonul cu luna): cardul rămâne alb. Culorile sunt scrise în el, nu citite din temă — și n-ai unde să le schimbi din afară, decât intrând în fiecare componentă."}
-        </small>
+      <p className="text-muted-foreground text-sm">
+        {useTokens
+          ? "În temă deschisă arată identic cu varianta de mână — oklch(0.985 0 0) CHIAR ESTE #fafafa. Comută tema din meniu: se adaptează singur, pentru că bg-card înseamnă var(--card), iar .dark rescrie variabila."
+          : "Comută tema din meniu (butonul cu luna): cardul rămâne alb. Culorile sunt scrise în el, nu citite din temă — și n-ai unde să le schimbi din afară, decât intrând în fiecare componentă."}
       </p>
     </div>
   );

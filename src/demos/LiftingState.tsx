@@ -30,23 +30,29 @@ type PriceCardProps = {
 // Zero useState aici. Cardul nu stie nici de curs de schimb, nici de celalalt
 // card: afiseaza un numar si anunta ca vrea altul.
 function PriceCard({ amount, label, currency, step = 1, onChange }: PriceCardProps) {
+  // Pas de curatare — cardul folosea `border: 1px solid #888`, o culoare scrisa
+  // de mana care nu stia nimic despre tema. Acum e acelasi card ca in pasii
+  // 10-12: bg-card + border pe tokeni, deci se muta singur pe tema intunecata.
   return (
-    <div style={{ border: "1px solid #888", borderRadius: 8, padding: 12, minWidth: 180 }}>
-      <label>
-        <div>
-          <small>{label}</small>
-        </div>
-        <input
-          type="number"
-          // `value` vine din props => input controlat. Fara `onChange` ar fi
-          // read-only: React redeseneaza mereu valoarea primita de sus.
-          value={amount}
-          step={step}
-          // e.target.value e mereu STRING in DOM, chiar si pentru type="number".
-          // Number(...) il converteste; fara asta "10" + 1 ar da "101".
-          onChange={e => onChange(Number(e.target.value))}
-        />{" "}
-        {currency}
+    <div className="bg-card text-card-foreground rounded-xl border p-6">
+      {/* <label> INFASOARA in continuare inputul (asociere implicita, fara id):
+          click pe eticheta muta focusul in input. Doar spatiile s-au mutat pe
+          container. */}
+      <label className="flex flex-col gap-2">
+        <span className="text-muted-foreground text-sm">{label}</span>
+        <span className="flex items-center gap-2">
+          <input
+            type="number"
+            // `value` vine din props => input controlat. Fara `onChange` ar fi
+            // read-only: React redeseneaza mereu valoarea primita de sus.
+            value={amount}
+            step={step}
+            // e.target.value e mereu STRING in DOM, chiar si pentru type="number".
+            // Number(...) il converteste; fara asta "10" + 1 ar da "101".
+            onChange={e => onChange(Number(e.target.value))}
+          />
+          <span className="text-sm">{currency}</span>
+        </span>
       </label>
     </div>
   );
@@ -60,10 +66,13 @@ export function LiftingState() {
   // useState.
   const rate = 5;
 
+  // Pas de curatare — acelasi grid cu doua coloane folosit de pasii 11-12, in
+  // locul unui flex cu `alignItems: "flex-start"`: cardurile ies egale in
+  // inaltime, deci input-urile lor stau pe aceeasi linie.
   return (
-    <div>
-      <div>{amount} RON</div>
-      <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 pb-8 text-left">
+      <div className="text-foreground text-lg font-semibold">{amount} RON</div>
+      <div className="grid gap-4 sm:grid-cols-2">
         {/* Cardul „nativ”: citeste starea direct si o scrie direct. `setAmount`
             este pasat ca valoare (fara paranteze) — pasezi functia, nu rezultatul
             apelului ei. */}

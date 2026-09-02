@@ -42,12 +42,17 @@ function GrupBox({ titlu, pretUnitar, persoane, subtotal, onDecrement, onIncreme
   // `disabled` e adevarat (actiunea n-are sens), nu o pacaleala vizuala — vezi pasul 10.
   const gol = persoane === 0;
 
+  // Pas de curatare — cardul e un flex vertical cu un singur gap, in loc de
+  // mt-4 pus pe fiecare bloc. Titlul si pretul stau lipite (gap-1) intr-un
+  // grup propriu, ca sa se citeasca drept un cap de card.
   return (
-    <div className="bg-card text-card-foreground rounded-xl border p-6">
-      <div className="font-semibold">{titlu}</div>
-      <div className="text-muted-foreground text-sm">{pretUnitar} lei / persoană</div>
+    <div className="bg-card text-card-foreground flex flex-col gap-4 rounded-xl border p-6">
+      <div className="flex flex-col gap-1">
+        <div className="font-semibold">{titlu}</div>
+        <div className="text-muted-foreground text-sm">{pretUnitar} lei / persoană</div>
+      </div>
 
-      <div className="mt-4 flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-2">
         {/* onClick={onDecrement}, fara paranteze: pasezi FUNCTIA. Cu paranteze ai
             apela-o in timpul randarii si ai declanșa un setState acolo. */}
         <Button variant="outline" size="sm" onClick={onDecrement} disabled={gol}>
@@ -62,7 +67,7 @@ function GrupBox({ titlu, pretUnitar, persoane, subtotal, onDecrement, onIncreme
         </Button>
       </div>
 
-      <div className="mt-4 text-sm">
+      <div className="text-sm">
         {persoane} × {pretUnitar} lei = <strong>{subtotal} lei</strong>
       </div>
     </div>
@@ -84,8 +89,10 @@ export function CustomHooks() {
   const totalPersoane = copii.count + adulti.count;
   const totalPlata = subtotalCopii + subtotalAdulti;
 
+  // Pas de curatare — aceeasi latime maxima ca restul ecranelor (max-w-3xl) si un
+  // singur gap pe container, in locul lui mt-4 / mt-6 / mt-2 pus pe fiecare copil.
   return (
-    <div className="mx-auto max-w-2xl text-left">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 pb-8 text-left">
       <div className="grid gap-4 sm:grid-cols-2">
         <GrupBox
           titlu="Copii"
@@ -107,19 +114,19 @@ export function CustomHooks() {
         />
       </div>
 
-      <div className="bg-card text-card-foreground mt-4 flex items-baseline justify-between rounded-xl border p-6">
+      <div className="bg-card text-card-foreground flex flex-wrap items-center justify-between gap-2 rounded-xl border p-6">
         <span className="font-semibold">Total grup</span>
         <span>
           {totalPersoane} persoane — <strong>{totalPlata} lei</strong>
         </span>
       </div>
 
-      <p className="text-muted-foreground mt-6 text-sm">
+      <p className="text-muted-foreground text-sm">
         Apasă <strong>+1</strong> la copii: numărul adulților nu se mișcă. Ambele countere vin din același{" "}
         <code>useCounter</code>, dar fiecare apel are propriul <code>useState</code> — se partajează codul, nu valoarea.
       </p>
 
-      <p className="text-muted-foreground mt-2 text-sm">
+      <p className="text-muted-foreground text-sm">
         Fereastra: {width} × {height} px — redimensionează browserul. Efectul cu <code>addEventListener</code> și
         cleanup-ul lui stau în <code>useWindowSize</code>; componenta asta nu știe că există.
       </p>

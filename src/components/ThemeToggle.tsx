@@ -22,8 +22,11 @@ export function ThemeToggle() {
   return (
     <Button
       variant="outline"
-      // size="icon" da un buton PATRAT (size-9), nu unul cu text si padding.
-      size="icon"
+      // size="icon-sm" da un buton PATRAT (size-8), nu unul cu text si padding.
+      // Pas de curatare — era "icon" (size-9), cu un rand mai inalt decat tab-urile
+      // de langa el (size="sm" = h-8): in meniu se vedea un buton coborat fata de
+      // vecini. Aceeasi inaltime, aceeasi linie de baza.
+      size="icon-sm"
       onClick={() => setDark(d => !d)}
       // Butonul nu are text, deci un cititor de ecran ar anunta doar "buton".
       // aria-label ii da numele care lipseste. E genul de detaliu pe care

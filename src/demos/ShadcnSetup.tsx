@@ -41,16 +41,20 @@ export function ShadcnSetup() {
   // era dezactivat.
   const [clicks, setClicks] = useState(0);
 
+  // Pas de curatare — s-a atins doar cadrul: invelisul comun al demo-urilor, un
+  // singur gap pe fiecare container, si titlurile de card fara mb-4 propriu.
+  // Butoanele scrise de mana din cardul din stanga au ramas INTENTIONAT: ele sunt
+  // contra-exemplul lectiei (outline-none, `disabled` doar la aparenta).
   return (
-    <div className="text-left">
-      <p className="text-muted-foreground mb-6 text-center text-sm">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 pb-8 text-left">
+      <p className="text-muted-foreground text-sm">
         Navighează prin zona de mai jos cu <kbd>Tab</kbd>: în stânga nu se vede unde ești, iar butonul „dezactivat”
         primește focus și click.
       </p>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="bg-card text-card-foreground rounded-xl border p-6">
-          <div className="mb-4 font-semibold">Scris de mână</div>
+        <div className="bg-card text-card-foreground flex flex-col gap-4 rounded-xl border p-6">
+          <div className="font-semibold">Scris de mână</div>
 
           <div className="flex flex-wrap items-center gap-3">
             {/* `outline-none` e greseala clasica, copiata din mii de exemple ca sa
@@ -71,13 +75,13 @@ export function ShadcnSetup() {
             </button>
           </div>
 
-          <p className="text-muted-foreground mt-4 text-sm">
+          <p className="text-muted-foreground text-sm">
             Click-uri primite de butonul „dezactivat”: <strong>{clicks}</strong>
           </p>
         </div>
 
-        <div className="bg-card text-card-foreground rounded-xl border p-6">
-          <div className="mb-4 font-semibold">shadcn/ui</div>
+        <div className="bg-card text-card-foreground flex flex-col gap-4 rounded-xl border p-6">
+          <div className="font-semibold">shadcn/ui</div>
 
           <div className="flex flex-wrap items-center gap-3">
             <Button>Salvează</Button>
@@ -87,14 +91,14 @@ export function ShadcnSetup() {
             <Button disabled>Dezactivat</Button>
           </div>
 
-          <p className="text-muted-foreground mt-4 text-sm">
+          <p className="text-muted-foreground text-sm">
             Inel de focus, hover și stare dezactivată reală — fără să le scriem noi.
           </p>
         </div>
       </div>
 
-      <div className="bg-card text-card-foreground mt-4 rounded-xl border p-6">
-        <div className="mb-4 font-semibold">Variantele, generate din listă</div>
+      <div className="bg-card text-card-foreground flex flex-col gap-4 rounded-xl border p-6">
+        <div className="font-semibold">Variantele, generate din listă</div>
         <div className="flex flex-wrap items-center gap-3">
           {variants.map(v => (
             <Button key={v} variant={v}>
@@ -102,7 +106,7 @@ export function ShadcnSetup() {
             </Button>
           ))}
         </div>
-        <p className="text-muted-foreground mt-4 text-sm">
+        <p className="text-muted-foreground text-sm">
           Toate vin din același fișier al nostru, <code>src/components/ui/button.tsx</code>. Nu așteptăm un release ca
           să schimbăm ceva în ele.
         </p>

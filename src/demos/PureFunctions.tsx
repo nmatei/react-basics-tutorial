@@ -9,6 +9,7 @@
 // vechi si o suma gresita — exact genul de bug care ajunge in productie.
 
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 const RATE_INITIAL = 5;
 const RATE_STEP = 0.05;
@@ -48,52 +49,69 @@ export function PureFunctions() {
   const [rate, setRate] = useState(RATE_INITIAL);
   const [comision, setComission] = useState(false);
 
+  // Pas de curatare — un singur gap pe container in loc de distantele implicite
+  // dintre <p> si butoane, si fiecare pereche de butoane pe rand propriu, aliniat
+  // cu items-center. Inainte butoanele stateau lipite unul de altul, iar
+  // checkbox-ul si eticheta lui erau despartite doar de un {" "}.
   return (
-    <div>
-      <p>
-        Suma: <strong>{ron} RON</strong>
-      </p>
-      {/* Forma cu functie — setRon(r => ...) — citeste valoarea curenta in
-          momentul aplicarii, nu pe cea capturata la render. */}
-      <button type="button" onClick={() => setRon(r => Math.max(0, r - 10))}>
-        -10
-      </button>
-      <button type="button" onClick={() => setRon(r => r + 10)}>
-        +10
-      </button>
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 pb-8 text-left">
+      <div className="flex flex-col gap-2">
+        <p>
+          Suma: <strong>{ron} RON</strong>
+        </p>
+        {/* Forma cu functie — setRon(r => ...) — citeste valoarea curenta in
+            momentul aplicarii, nu pe cea capturata la render. */}
+        <div className="flex flex-wrap items-center gap-2">
+          <Button type="button" variant="outline" size="sm" onClick={() => setRon(r => Math.max(0, r - 10))}>
+            -10
+          </Button>
+          <Button type="button" size="sm" onClick={() => setRon(r => r + 10)}>
+            +10
+          </Button>
+        </div>
+      </div>
 
-      <p>
-        Curs: <strong>1 EUR = {rate.toFixed(2)} RON</strong>
-      </p>
-      {/* Math.max opreste cursul inainte de 0, ca sa nu ajungem la impartire
-          la zero si sa afisam Infinity in loc de lectie. */}
-      <button type="button" onClick={() => setRate(r => Math.max(RATE_STEP, r - RATE_STEP))}>
-        -{RATE_STEP}
-      </button>
-      <button type="button" onClick={() => setRate(r => r + RATE_STEP)}>
-        +{RATE_STEP}
-      </button>
+      <div className="flex flex-col gap-2">
+        <p>
+          Curs: <strong>1 EUR = {rate.toFixed(2)} RON</strong>
+        </p>
+        {/* Math.max opreste cursul inainte de 0, ca sa nu ajungem la impartire
+            la zero si sa afisam Infinity in loc de lectie. */}
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setRate(r => Math.max(RATE_STEP, r - RATE_STEP))}
+          >
+            -{RATE_STEP}
+          </Button>
+          <Button type="button" size="sm" onClick={() => setRate(r => r + RATE_STEP)}>
+            +{RATE_STEP}
+          </Button>
+        </div>
+      </div>
 
-      <p>
-        {/* Checkbox NEcontrolat: fara useState, fara onChange. Valoarea lui
-            traieste doar in DOM. `htmlFor` in loc de `for` pentru ca `for` e
-            cuvant rezervat in JS. */}
-        <input id={COMISION_ID} type="checkbox" onChange={e => setComission(e.target.checked)} />{" "}
+      {/* Checkbox NEcontrolat: fara useState, fara onChange. Valoarea lui
+          traieste doar in DOM. `htmlFor` in loc de `for` pentru ca `for` e
+          cuvant rezervat in JS. */}
+      <div className="flex items-center gap-2">
+        <input id={COMISION_ID} type="checkbox" onChange={e => setComission(e.target.checked)} />
         <label htmlFor={COMISION_ID}>aplica comision ({COMISION_PCT * 100}%)</label>
-      </p>
+      </div>
 
-      <p>
-        pureConvert: <strong>{pureConvert(ron, rate).toFixed(2)} EUR</strong>
-      </p>
-      <p>
-        impureConvert: <strong>{impureConvert(ron, rate, comision).toFixed(2)} EUR</strong>
-      </p>
+      <div className="flex flex-col gap-1">
+        <p>
+          pureConvert: <strong>{pureConvert(ron, rate).toFixed(2)} EUR</strong>
+        </p>
+        <p>
+          impureConvert: <strong>{impureConvert(ron, rate, comision).toFixed(2)} EUR</strong>
+        </p>
+      </div>
 
-      <p>
-        <small>
-          Experiment: modifica suma sau cursul → ambele valori se actualizeaza. Bifeaza comisionul → nu se schimba
-          nimic. Apasa apoi +10 → comisionul apare brusc, la actiunea gresita.
-        </small>
+      <p className="text-muted-foreground text-sm">
+        Experiment: modifica suma sau cursul → ambele valori se actualizeaza. Bifeaza comisionul → nu se schimba nimic.
+        Apasa apoi +10 → comisionul apare brusc, la actiunea gresita.
       </p>
     </div>
   );

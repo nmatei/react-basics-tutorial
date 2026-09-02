@@ -22,6 +22,7 @@
 // si localStorage sunt lectii viitoare; aici doar le punem fata in fata.
 
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 // Acelasi tipar ca registrul din App.tsx, redus la minimum: id + ce se afiseaza.
 const miniDemos = [
@@ -38,16 +39,26 @@ export function DemoMenu() {
   // sa tratam cazul. `?? miniDemos[0]` e alternativa la `!`, interzis in proiect.
   const active = miniDemos.find(d => d.id === activeId) ?? miniDemos[0];
 
+  // Pas de curatare — aceleasi butoane, dar din librarie si cu selectia exprimata
+  // ca VARIANTA, exact ca tab-urile din meniul de sus (components/DemoTab.tsx).
+  // Nu s-a adaugat stare: `activeId` exista de la inceput, doar acum se si vede
+  // care buton e cel apasat.
   return (
-    <div>
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 pb-8 text-left">
       {/* `map` returneaza un ARRAY de elemente, iar JSX stie sa randeze un array
           acolo unde accepta un element. Nu exista o sintaxa speciala de repetitie:
           e cod JavaScript obisnuit, scris intre acolade. */}
-      <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
+      <div className="flex flex-wrap items-center gap-2">
         {miniDemos.map(d => (
-          <button key={d.id} type="button" onClick={() => setActiveId(d.id)}>
+          <Button
+            key={d.id}
+            type="button"
+            variant={d.id === active.id ? "default" : "secondary"}
+            size="sm"
+            onClick={() => setActiveId(d.id)}
+          >
             {d.label}
-          </button>
+          </Button>
         ))}
       </div>
 

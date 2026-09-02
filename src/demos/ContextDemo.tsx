@@ -70,17 +70,21 @@ export function ContextDemo() {
   const copii = useCounter(0, 1);
   const adulti = useCounter(0, 1);
 
+  // Pas de curatare — un singur gap pe container in loc de mt-1 / mt-2 / mt-4 /
+  // mt-8 pus pe fiecare copil, si carduri care sunt ele insele flex vertical cu
+  // gap. Randurile cu buton folosesc items-center, ca textul si butonul sa stea
+  // pe aceeasi linie.
   return (
-    <div className="mx-auto max-w-3xl text-left">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 pb-8 text-left">
       <p className="text-muted-foreground text-sm">
         Pasul activ, citit aici cu <code>useActiveStep()</code>: <code>{activeId}</code>. Nicio componenta de pe drum nu
         l-a pasat mai departe — si ramane la fel dupa refresh (<code>localStorage</code>).
       </p>
 
-      <div className="mt-4 grid gap-4 sm:grid-cols-2">
-        <div className="bg-card text-card-foreground rounded-xl border p-6">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="bg-card text-card-foreground flex flex-col gap-4 rounded-xl border p-6">
           <h2 className="font-semibold">GLOBAL — useContext</h2>
-          <p className="text-muted-foreground mt-1 text-sm">
+          <p className="text-muted-foreground text-sm">
             Al doilea meniu, alt tip, alta ramura a arborelui. Nu stie ca exista butoanele din header, dar scrie exact
             aceeasi valoare.
           </p>
@@ -88,7 +92,7 @@ export function ContextDemo() {
           {/* Optiunile sunt DERIVATE din `steps`, care vine tot din context: lista de
               pasi calatoreste pe acelasi canal ca valoarea activa. */}
           <select
-            className="border-input bg-background focus-visible:ring-ring mt-4 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
+            className="border-input bg-background focus-visible:ring-ring h-9 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
             value={activeId}
             // e.target.value e string-ul din <option value=...>, adica id-ul pasului.
             onChange={e => setActiveId(e.target.value)}
@@ -100,43 +104,47 @@ export function ContextDemo() {
             ))}
           </select>
 
-          <p className="text-muted-foreground mt-4 text-sm">
+          <p className="text-muted-foreground text-sm">
             Alege alt pas: se schimba si tab-ul activ din header, si ecranul. O singura sursa, doi scriitori.
           </p>
         </div>
 
-        <div className="bg-card text-card-foreground rounded-xl border p-6">
+        <div className="bg-card text-card-foreground flex flex-col gap-4 rounded-xl border p-6">
           <h2 className="font-semibold">LOCAL — useState (Pas 11)</h2>
-          <p className="text-muted-foreground mt-1 text-sm">
+          <p className="text-muted-foreground text-sm">
             Doua apeluri <code>useCounter(0, 1)</code>, aceeasi functie. Fiecare apel isi are propriul{" "}
             <code>useState</code>.
           </p>
 
-          <div className="mt-4 flex items-center justify-between">
-            <span className="text-sm">Copii: {copii.count}</span>
-            <Button size="sm" onClick={copii.increment}>
-              +1
-            </Button>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-sm">Copii: {copii.count}</span>
+              <Button size="sm" onClick={copii.increment}>
+                +1
+              </Button>
+            </div>
+
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-sm">Adulti: {adulti.count}</span>
+              <Button size="sm" onClick={adulti.increment}>
+                +1
+              </Button>
+            </div>
           </div>
 
-          <div className="mt-2 flex items-center justify-between">
-            <span className="text-sm">Adulti: {adulti.count}</span>
-            <Button size="sm" onClick={adulti.increment}>
-              +1
-            </Button>
-          </div>
-
-          <p className="text-muted-foreground mt-4 text-sm">
+          <p className="text-muted-foreground text-sm">
             Apasa +1 la copii: adultii nu se misca. Se partajeaza codul, nu valoarea — invers decat in stanga.
           </p>
         </div>
       </div>
 
-      <h2 className="mt-8 font-semibold">Reteta, in 5 etape</h2>
-      <p className="text-muted-foreground mt-1 mb-3 text-sm">
-        Codul real din <code>src/context/ActiveStepProvider.tsx</code>, plus wrap-ul din <code>App.tsx</code>.
-      </p>
-      <CodeBlock>{RETETA}</CodeBlock>
+      <div className="flex flex-col gap-2">
+        <h2 className="font-semibold">Reteta, in 5 etape</h2>
+        <p className="text-muted-foreground text-sm">
+          Codul real din <code>src/context/ActiveStepProvider.tsx</code>, plus wrap-ul din <code>App.tsx</code>.
+        </p>
+        <CodeBlock>{RETETA}</CodeBlock>
+      </div>
     </div>
   );
 }

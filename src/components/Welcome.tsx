@@ -2,6 +2,7 @@
 // ramana doar un shell. Nu demonstreaza niciun concept React — o pastram ca
 // punct de plecare si pentru experimentele din pasul 1 (props).
 
+import { Button } from "@/components/ui/button";
 import reactLogo from "@/assets/react.svg";
 import viteLogo from "@/assets/vite.svg";
 import heroImg from "@/assets/hero.png";
@@ -9,9 +10,13 @@ import heroImg from "@/assets/hero.png";
 // Props tipate cu un tip local, in acelasi fisier. `?` = optional.
 type TestButtonProps = { width?: number; title?: string };
 
+// Pas de curatare — <button> scris de mana a devenit <Button> din librarie.
+// Lectia (props ca argumente ale unei functii) e neatinsa: `width` si `title` vin
+// tot din props. Ce a dispărut e `margin: 5` de pe fiecare buton — distantele stau
+// acum pe containerul care le aranjeaza, nu pe fiecare copil.
 function TestButton(props: TestButtonProps) {
   // ?? = "nullish coalescing": ia partea dreapta doar daca stanga e null/undefined.
-  return <button style={{ width: props.width ?? "auto", padding: "8px", margin: 5 }}>{props.title}</button>;
+  return <Button style={{ width: props.width ?? "auto" }}>{props.title}</Button>;
 }
 
 function Hero() {
@@ -35,13 +40,15 @@ export function Welcome() {
     <>
       <section id="center">
         <Hero />
-        <div>
+        <div className="flex flex-col items-center gap-4">
           <h2>Get started</h2>
           {/* Aceeasi componenta, doua forme: ca element JSX (React o apeleaza)
               si ca apel de functie direct (o apelam noi). */}
-          <TestButton width={200} title="My First Button" />
-          {TestButton({ width: 100, title: "fn call" })}
-          {b1}
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <TestButton width={200} title="My First Button" />
+            {TestButton({ width: 100, title: "fn call" })}
+            {b1}
+          </div>
           <p>
             Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
           </p>

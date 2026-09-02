@@ -134,17 +134,27 @@ li:not([class]) {
    ca ceva sa se planga. Variabilele CSS sunt un namespace global fara compilator,
    exact problema descrisa la pasul 9. Solutia: numele generice raman ale
    sistemului de design (shadcn), iar cele vechi, specifice shell-ului, primesc
-   prefix. */
+   prefix.
+
+   Pas de curatare — variabilele shell-ului nu mai au valori proprii: sunt
+   DERIVATE din tokenii de mai sus. Inainte fiecare avea doua valori scrise de
+   mana (una in :root, alta in @media prefers-color-scheme), deci existau doua
+   teme paralele: cardurile ascultau de clasa .dark (butonul din meniu), iar
+   shell-ul asculta de sistem. Cu comutatorul pe intuneric si sistemul pe lumina,
+   titlurile, fundalul si blocurile <code> RAMANEAU ALBE. Acum e o singura
+   sursa: schimbi --card / --foreground si se muta tot.
+   color-mix() cere un procent dintr-o culoare — echivalentul lui `/10` din
+   utilitarele Tailwind, dar scris in CSS pur, pentru variabile. */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --shell-border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --brand: #aa3bff;
-  --brand-bg: rgba(170, 59, 255, 0.1);
-  --brand-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
+  --text: var(--muted-foreground);
+  --text-h: var(--foreground);
+  --bg: var(--background);
+  --shell-border: var(--border);
+  --code-bg: var(--secondary);
+  --brand: var(--primary);
+  --brand-bg: color-mix(in oklab, var(--primary) 10%, transparent);
+  --brand-border: color-mix(in oklab, var(--primary) 50%, transparent);
+  --social-bg: var(--secondary);
   --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
   --sans: system-ui, "Segoe UI", Roboto, sans-serif;
@@ -153,7 +163,10 @@ li:not([class]) {
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
-  color-scheme: light dark;
+  /* `light dark` insemna "urmeaza sistemul", deci checkbox-urile si input-urile
+     native ramaneau deschise pe tema intunecata a aplicatiei. Acum tema o decide
+     tot clasa .dark, ca restul ecranului. */
+  color-scheme: light;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
@@ -166,27 +179,19 @@ li:not([class]) {
   }
 }
 
-/* Atentie: doua mecanisme diferite de tema traiesc in acest fisier. Blocul de
-   mai jos (stilurile vechi ale shell-ului) asculta de SISTEM si nu poate fi
-   comutat din aplicatie. Tokenii de la pasul 9 asculta de clasa .dark, deci ii
-   comuti dintr-un buton. */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --shell-border: #2e303a;
-    --code-bg: #1f2028;
-    --brand: #c084fc;
-    --brand-bg: rgba(192, 132, 252, 0.15);
-    --brand-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+/* Ce NU se poate deriva dintr-un token: umbra (nu avem token de umbra) si
+   iconitele SVG negre din pagina de start, care au nevoie de inversare.
+   Blocul sta DUPA :root-ul de mai sus intentionat: `.dark` si `:root` au aceeasi
+   specificitate, deci intre ele decide ordinea din fisier — daca ar fi mai sus,
+   `color-scheme: light` din :root ar castiga si input-urile native ar ramane
+   deschise. */
+.dark {
+  color-scheme: dark;
+  --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+}
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+.dark #social .button-icon {
+  filter: invert(1) brightness(2);
 }
 
 #root {
@@ -247,4 +252,19 @@ code {
   line-height: 135%;
   padding: 4px 8px;
   background: var(--code-bg);
+}
+
+/* Pas de curatare — `code` de mai sus e o PASTILA inline (fundal, padding,
+   inline-flex), potrivita pentru <code>asa</code> in mijlocul unei fraze. Cand
+   acelasi tag sta intr-un <pre>, adica un bloc de cod pe mai multe randuri,
+   pastila era greseala: fundal peste fundal, padding peste padding si o alta
+   marime de font decat restul blocului. Suprafata si spatiul le da <pre>, deci
+   aici <code> nu mai aduce nimic al lui. */
+pre code {
+  display: inline;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
 }
