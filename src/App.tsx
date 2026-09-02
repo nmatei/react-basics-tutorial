@@ -1,9 +1,9 @@
-// Shell-ul aplicatiei: tine registrul de demo-uri si pasul activ, niciodata
-// codul unui demo. Un pas nou = un fisier in src/demos/ + o intrare in `demos`.
-// Meniul nu se mai scrie de mana: se DERIVA din registru cu `map`, deci creste
-// singur la fiecare intrare noua.
+// Shell-ul aplicatiei: tine registrul de demo-uri, niciodata codul unui demo.
+// Un pas nou = un fisier in src/demos/ + o intrare in `demos`.
+// Pas 12: `activeId` NU mai sta aici. A urcat intr-un provider, deci App nu mai
+// paseaza nimic in jos — fiecare consumator isi ia singur ce-i trebuie.
 
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 // De la pasul 8, importurile interne folosesc aliasul @/ = src/. Din acest
 // fisier diferenta e cosmetica (e chiar in radacina lui src), dar castigul e ca
 // aceleasi linii raman valide oriunde le-ai muta.
@@ -11,6 +11,8 @@ import "@/App.css";
 import { DemoTab } from "@/components/DemoTab";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Welcome } from "@/components/Welcome";
+import { ActiveStepProvider, useActiveStep, type Step } from "@/context/ActiveStepProvider";
+import { ContextDemo } from "@/demos/ContextDemo";
 import { Counter } from "@/demos/Counter";
 import { CounterClass } from "@/demos/CounterClass";
 import { CustomHooks } from "@/demos/CustomHooks";
@@ -23,9 +25,11 @@ import { ShadcnSetup } from "@/demos/ShadcnSetup";
 import { TailwindSetup } from "@/demos/TailwindSetup";
 import { Timer } from "@/demos/Timer";
 
+// `Step` (id + step + title) e forma ceruta de provider; shell-ul mai adauga ce
+// randeaza. `&` e intersectia de tipuri din TypeScript: "tot din Step, plus asta".
 // ReactNode = orice poate fi randat (element, text, null). `element` chiar tine
 // un element JSX, adica descrierea deja construita a demo-ului.
-type Demo = { id: string; step: number; title: string; element: ReactNode };
+type Demo = Step & { element: ReactNode };
 
 const demos: Demo[] = [
   { id: "welcome", step: 1, title: "Structura proiectului", element: <Welcome /> },
@@ -39,13 +43,17 @@ const demos: Demo[] = [
   { id: "path-alias", step: 8, title: "Alias de cale @/", element: <PathAlias /> },
   { id: "tailwind-setup", step: 9, title: "Tailwind CSS și tokeni de temă", element: <TailwindSetup /> },
   { id: "shadcn-setup", step: 10, title: "shadcn/ui — componente copiate în proiect", element: <ShadcnSetup /> },
-  { id: "custom-hooks", step: 11, title: "Hooks custom", element: <CustomHooks /> }
+  { id: "custom-hooks", step: 11, title: "Hooks custom", element: <CustomHooks /> },
+  { id: "context", step: 12, title: "Context API", element: <ContextDemo /> }
 ];
 
-function App() {
-  // Singura sursa de adevar a navigarii: ID-ul activ, un string. Se pierde la
-  // refresh — useState traieste in memoria paginii, nu pe disc.
-  const [activeId, setActiveId] = useState("custom-hooks");
+// Consumatorul e un component SEPARAT, si asta nu e cosmetic: provider-ul trebuie
+// sa fie DEASUPRA consumatorului in arbore. Daca App ar chema el useActiveStep(),
+// ar cauta un provider mai sus decat cel pe care tot el il randeaza — si ar primi
+// exact eroarea din etapa 3.
+function Shell() {
+  // Zero props. Ce era pana acum `useState` in App vine acum de pe canal.
+  const { activeId, setActiveId, steps } = useActiveStep();
 
   // `?? demos[0]` face ca `active` sa nu fie niciodata undefined — asa evitam
   // `!` (non-null assertion), care e interzis in acest proiect. Demo-ul activ e
@@ -54,29 +62,24 @@ function App() {
 
   return (
     <>
-      {/* `key` e citit de React ca sa potriveasca elementele intre doua randari;
-          NU ajunge in DemoTab ca prop. Daca ai nevoie de id si inauntru, il pasezi
-          separat. */}
-      {/* Pas 10 — containerul meniului a trecut si el de la obiectul `style` la
-          utilitare. `items-center` tine butonul de tema aliniat cu tab-urile, care
-          sunt mai mici (size="sm"). */}
+      {/* Meniul se deriva din `steps`, lista primita din context — nu din registrul
+          local. Aceeasi lista o citeste si <select>-ul din demo-ul pasului 12. */}
       <nav className="flex flex-wrap items-center justify-center gap-3 px-4 py-6">
-        {demos.map(d => (
+        {steps.map(s => (
           <DemoTab
-            key={d.id}
-            //step={d.step % 2 === 0 ? d.step : undefined}
-            step={d.step}
-            title={d.title}
-            active={d.id === active.id}
-            // Arrow function, nu `onSelect={setActiveId(d.id)}`: al doilea ar APELA
+            key={s.id}
+            step={s.step}
+            title={s.title}
+            active={s.id === active.id}
+            // Arrow function, nu `onSelect={setActiveId(s.id)}`: al doilea ar APELA
             // setter-ul in timpul randarii. Pasezi ce sa se intample la click.
-            onSelect={() => setActiveId(d.id)}
+            onSelect={() => setActiveId(s.id)}
           />
         ))}
 
         {/* Tema e a intregii aplicatii, deci comutatorul sta in shell, nu intr-un
-            demo. Nu primeste niciun prop: isi tine singur starea si scrie clasa pe
-            <html>, iar tokenii fac restul. */}
+            demo. Isi tine inca singur starea, cu useState: e exact candidatul
+            urmator pentru aceeasi reteta (ThemeProvider + useTheme). */}
         <ThemeToggle />
       </nav>
 
@@ -87,6 +90,16 @@ function App() {
         {active.element}
       </main>
     </>
+  );
+}
+
+// ETAPA 4 — wrap-ul. Tot ce e inauntru poate citi valoarea, la orice adancime;
+// tot ce ar fi in afara, nu.
+function App() {
+  return (
+    <ActiveStepProvider steps={demos}>
+      <Shell />
+    </ActiveStepProvider>
   );
 }
 

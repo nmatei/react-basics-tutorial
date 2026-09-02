@@ -57,7 +57,7 @@ O singură aplicație care crește pas cu pas: fiecare concept studiat devine un
 - Restul structurii: `src/components/` (partajat între pași), `src/hooks/` (un hook per fișier), `src/context/` (un provider + hook-ul lui, per fișier), `src/lib/` (helperi mici).
 - Adăugarea unui pas = un fișier nou în `src/demos/` + o singură intrare în registru. Nimic altceva nu se modifică.
 - Importurile interne folosesc aliasul `@/` = `src/`, declarat în două locuri ținute sincron: `paths` în `tsconfig.app.json` (TypeScript + IDE) și `resolve.alias` în `vite.config.ts` (bundler). Importurile relative rămân doar pentru frați din același folder (`./Sibling`).
-- Pasul activ este ținut în `useState`, iar meniul de navigare se derivă din registru cu `map`; migrarea la React Router este ea însăși o lecție ulterioară (§6, pasul 19).
+- Pasul activ a trăit în `useState` în `App.tsx` până la pasul 12, când a urcat în `src/context/ActiveStepProvider.tsx` (context + `localStorage`); consumatorii îl citesc cu `useActiveStep()`, fără props. Meniul de navigare se derivă din lista de pași primită din context; migrarea la React Router rămâne o lecție ulterioară.
 - Pașii deja existenți trebuie să rămână funcționali pe măsură ce aplicația crește.
 
 ## 6. Traseul conceptelor
@@ -75,10 +75,11 @@ Listă ordonată, ajustabilă pe parcurs.
 - [x] Pas 9 — Tailwind CSS v4: utility-first + tokeni de temă (`@theme inline`, dark mode pe clasa `.dark`)
 - [x] Pas 10 — shadcn/ui: componente copiate în proiect, variante cu `cva`, `cn()` pentru conflicte de clase
 - [x] Pas 11 — Hooks custom (`useCounter`, `useWindowSize`): o funcție cu nume `use*`, o instanță de stare per APEL
-- [ ] Pas 12 — Randare condiționată (`&&`, ternar, early return)
-- [ ] Pas 13 — Formulare și input-uri controlate
-- [ ] Pas 14 — Componente de compoziție (`children`, `asChild`, slot-uri)
-- [ ] Pas 15 — Context API + un hook custom peste context (contra-exemplul pasului 11: o singură sursă partajată)
+- [x] Pas 12 — Context API + un hook custom peste context (`ActiveStepProvider` / `useActiveStep`): o singură sursă partajată, contra-exemplul pasului 11. Include persistarea pasului activ în `localStorage`.
+- [ ] Pas 13 — Randare condiționată (`&&`, ternar, early return)
+- [ ] Pas 14 — Formulare și input-uri controlate
+- [ ] Pas 15 — Componente de compoziție (`children`, `asChild`, slot-uri)
+- [ ] Pas 16 — `useReducer`: mai multe câmpuri de stare care se schimbă împreună, mutate într-o singură funcție de tranziție
 
 ## 7. Definiția de „lecție terminată”
 
